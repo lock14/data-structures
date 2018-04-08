@@ -60,7 +60,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
     
     protected void check(int index) {
         if (index < 0 || index >= size()) {
-            throw new IndexOutOfBoundsException(index);
+            throw new IndexOutOfBoundsException("Index out of range: " + index);
         }
     }
 }
