@@ -12,5 +12,10 @@ pipeline {
         sh 'mvn -B -DskipTests clean package'
       }
     }
+    stage('Unit Tests') {
+      steps {
+        sh 'mvn test'
+      }
+    }
   }
 }
