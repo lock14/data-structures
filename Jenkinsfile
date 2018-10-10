@@ -13,13 +13,16 @@ pipeline {
       }
     }
     stage('Unit Tests') {
+      post {
+        always {
+          junit 'target/surefire-reports/*.xml'
+
+        }
+
+      }
       steps {
         sh 'mvn test'
-      }
-      post {
-          always {
-              junit 'target/surefire-reports/*.xml'
-          }
+        junit 'target/surefire-reports/*.xml'
       }
     }
   }
