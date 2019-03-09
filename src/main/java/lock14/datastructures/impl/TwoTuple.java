@@ -2,16 +2,15 @@ package lock14.datastructures.impl;
 
 import lock14.datastructures.Pair;
 
+import java.util.Objects;
+
 public class TwoTuple<T1, T2> implements Pair<T1, T2> {
     private T1 fst;
     private T2 snd;
     
     public TwoTuple(T1 first, T2 second) {
-        if (first == null || second == null) {
-            throw new IllegalArgumentException();
-        }
-        fst = first;
-        snd = second;
+        fst = Objects.requireNonNull(first);
+        snd = Objects.requireNonNull(second);
     }
     
     public T1 first() {
@@ -25,24 +24,17 @@ public class TwoTuple<T1, T2> implements Pair<T1, T2> {
     public boolean equals(Object o) {
         if (o instanceof TwoTuple) {
             TwoTuple<?, ?> other = (TwoTuple<?, ?>) o;
-            return this.fst.equals(other.fst) && this.snd.equals(other.snd);
+            return Objects.equals(this.fst, other.fst)
+                    && Objects.equals(this.snd, other.snd);
         }
         return false;
     }
     
     public int hashCode() {
-        int hash = 1;
-        hash = 31 * hash + fst.hashCode();
-        hash = 31 * hash + snd.hashCode();
-        return hash;
+        return Objects.hash(fst, snd);
     }
     
     public String toString() {
-        return new StringBuilder("(")
-                   .append(fst)
-                   .append(", ")
-                   .append(snd)
-                   .append(")")
-                   .toString();
+        return "(" + fst + ", " + snd + ")";
     }
 }

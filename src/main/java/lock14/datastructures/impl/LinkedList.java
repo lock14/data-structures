@@ -3,6 +3,7 @@ package lock14.datastructures.impl;
 import java.util.ConcurrentModificationException;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import lock14.datastructures.Collection;
 import lock14.datastructures.SequentialList;
@@ -14,6 +15,10 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
     private int modificationCount;
     
     public LinkedList() {
+        this(null);
+    }
+    
+    public LinkedList(Collection<E> c) {
         // create sentinel nodes
         head = new Node<>(null);
         tail = new Node<>(null);
@@ -21,11 +26,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
         tail.prev = head;
         size = 0;
         modificationCount = 0;
-    }
-    
-    public LinkedList(Collection<E> c) {
-        this();
-        addAll(c);
+        Optional.ofNullable(c).ifPresent(this::addAll);
     }
     
     @Override

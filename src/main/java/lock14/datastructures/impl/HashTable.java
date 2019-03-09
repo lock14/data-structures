@@ -4,6 +4,8 @@ import lock14.datastructures.Map;
 import lock14.datastructures.Pair;
 import lock14.datastructures.Set;
 
+import java.util.Iterator;
+
 public class HashTable<K, V> implements Map<K,V> {
     public static final int     DEFAULT_SIZE    = 100;
     private static final double MAX_LOAD_FACTOR = 0.7;
@@ -101,13 +103,40 @@ public class HashTable<K, V> implements Map<K,V> {
     }
     
     public Set<K> keySet() {
-        // TODO : fix this
-        return null;
+        // TODO : implement this
+        java.util.Hashtable h;
+        throw new UnsupportedOperationException();
+    }
+
+    private class KeySet extends AbstractSet<K> {
+
+        @Override
+        public Iterator<K> iterator() {
+            return null;
+        }
+
+        @Override
+        public int size() {
+            return HashTable.this.size();
+        }
     }
     
     public Set<Pair<K, V>> entrySet() {
-        // TODO : fix this
-        return null;
+        // TODO : implement this
+        throw new UnsupportedOperationException();
+    }
+
+    private class EntrySet extends AbstractSet<K> {
+
+        @Override
+        public Iterator<K> iterator() {
+            return null;
+        }
+
+        @Override
+        public int size() {
+            return HashTable.this.size();
+        }
     }
 
     private int fixHash(int hash) {

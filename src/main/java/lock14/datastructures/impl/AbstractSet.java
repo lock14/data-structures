@@ -6,7 +6,7 @@ import lock14.datastructures.Set;
 
 public abstract class AbstractSet<E> extends AbstractCollection<E> implements Set<E> {
     
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (o == this) {
             return true;
         }
@@ -25,7 +25,7 @@ public abstract class AbstractSet<E> extends AbstractCollection<E> implements Se
         return false;
     }
     
-    public int hashCode() {
+    public final int hashCode() {
         int hash = 1;
         for (E e : this)
             hash = 29 * hash + (e == null ? 0 : e.hashCode());

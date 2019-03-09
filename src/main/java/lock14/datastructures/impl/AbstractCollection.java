@@ -5,7 +5,12 @@ import java.util.Iterator;
 import lock14.datastructures.Collection;
 
 public abstract class AbstractCollection<E> implements Collection<E> {
-    
+
+    @Override
+    public void add(E element) {
+        throw new UnsupportedOperationException();
+    }
+
     @Override
     public void addAll(Collection<? extends E> other) {
         Iterator<? extends E> itr = other.iterator();
@@ -82,7 +87,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
     }
     
     @Override
-    public String toString() {
+    public final String toString() {
         StringBuilder sb = new StringBuilder("[");
         Iterator<E> itr = iterator();
         if (itr.hasNext()) {

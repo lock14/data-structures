@@ -1,9 +1,6 @@
 package lock14.datastructures.impl;
 
-import java.util.Arrays;
-import java.util.ConcurrentModificationException;
-import java.util.ListIterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import lock14.datastructures.Collection;
 import lock14.datastructures.RandomAccessList;
@@ -26,7 +23,7 @@ public class ArrayList<E> extends AbstractList<E> implements RandomAccessList<E>
     
     public ArrayList(Collection<E> c) {
         this(c.size());
-        addAll(c);
+        Optional.ofNullable(c).ifPresent(this::addAll);
     }
 
     @Override
@@ -188,6 +185,6 @@ public class ArrayList<E> extends AbstractList<E> implements RandomAccessList<E>
     public static void main(String[] args) {
         ArrayList<Integer> list = new ArrayList<>();
         ArrayList<Integer> list2 = new ArrayList<>();
-        list.equals(list2);
+        System.out.println(list.equals(list2));
     }
 }

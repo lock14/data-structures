@@ -1,6 +1,7 @@
 package lock14.datastructures.impl;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 import lock14.datastructures.Collection;
 import lock14.datastructures.SequentialList;
@@ -28,9 +29,7 @@ public class SequentialQueue<E> extends AbstractQueue<E> {
             // convert checked exception to Runtime Exception
             throw new RuntimeException(e);
         }
-        if (c != null) {
-            addAll(c);
-        }
+        Optional.ofNullable(c).ifPresent(this::addAll);
     }
     
     @Override

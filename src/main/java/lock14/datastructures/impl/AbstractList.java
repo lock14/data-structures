@@ -12,7 +12,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
     }
     
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (o == this) {
             return true;
         }
@@ -32,7 +32,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
     }
     
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         int hash = 1;
         for (E e : this)
             hash = 31 * hash + (e == null ? 0 : e.hashCode());

@@ -2,6 +2,7 @@ package lock14.datastructures.impl;
 
 import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.Optional;
 
 import lock14.datastructures.Collection;
 import lock14.datastructures.List;
@@ -30,9 +31,7 @@ public class ListStack<E> extends AbstractStack<E> {
             // convert checked exception to Runtime Exception
             throw new RuntimeException(e);
         }
-        if (c != null) {
-            addAll(c);
-        }
+        Optional.ofNullable(c).ifPresent(this::addAll);
     }
     
     @Override
