@@ -10,19 +10,19 @@ import lock14.datastructures.Stack;
 
 public class ListStack<E> extends AbstractStack<E> {
     private List<E> stack;
-    
+
     public ListStack() {
-        this((Collection<E>)null);
+        this((Collection<E>) null);
     }
-    
+
     public ListStack(Collection<E> c) {
         this(c, ArrayList.class);
     }
-    
+
     public <T extends List<?>> ListStack(Class<T> backingClass) {
         this(null, backingClass);
     }
-    
+
     @SuppressWarnings("unchecked")
     public <T extends List<?>> ListStack(Collection<E> c, Class<T> backingClass) {
         try {
@@ -33,12 +33,12 @@ public class ListStack<E> extends AbstractStack<E> {
         }
         Optional.ofNullable(c).ifPresent(this::addAll);
     }
-    
+
     @Override
     public Iterator<E> iterator() {
         return new ListStackIterator(stack);
     }
-    
+
     @Override
     public E peek() {
         return stack.get(size() - 1);
@@ -60,15 +60,15 @@ public class ListStack<E> extends AbstractStack<E> {
     public int size() {
         return stack.size();
     }
-    
+
     private class ListStackIterator implements Iterator<E> {
-        
+
         private ListIterator<E> listiterator;
-        
+
         protected ListStackIterator(List<E> list) {
             this.listiterator = list.listIterator(list.size());
         }
-        
+
         @Override
         public boolean hasNext() {
             return listiterator.hasPrevious();
@@ -78,14 +78,14 @@ public class ListStack<E> extends AbstractStack<E> {
         public E next() {
             return listiterator.previous();
         }
-        
+
         @Override
         public void remove() {
             listiterator.remove();
         }
-        
+
     }
-    
+
     public static void main(String[] args) {
         Stack<Integer> stack = new ListStack<>();
         System.out.println(stack);

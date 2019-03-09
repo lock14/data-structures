@@ -3,7 +3,7 @@ package lock14.datastructures;
 import java.util.ListIterator;
 
 public interface List<E> extends Collection<E> {
-    
+
     public void add(int index, E element);
 
     public E get(int index);

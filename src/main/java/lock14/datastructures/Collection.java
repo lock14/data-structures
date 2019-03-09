@@ -3,7 +3,7 @@ package lock14.datastructures;
 import java.util.Iterator;
 
 public interface Collection<E> extends Iterable<E> {
-    
+
     public void add(E e);
 
     public void addAll(Collection<? extends E> c);

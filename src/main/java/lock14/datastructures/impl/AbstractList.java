@@ -5,12 +5,12 @@ import java.util.Iterator;
 import lock14.datastructures.List;
 
 public abstract class AbstractList<E> extends AbstractCollection<E> implements List<E> {
-    
+
     @Override
     public void add(E element) {
         add(size(), element);
     }
-    
+
     @Override
     public final boolean equals(Object o) {
         if (o == this) {
@@ -30,15 +30,16 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
         }
         return false;
     }
-    
+
     @Override
     public final int hashCode() {
         int hash = 1;
-        for (E e : this)
+        for (E e : this) {
             hash = 31 * hash + (e == null ? 0 : e.hashCode());
+        }
         return hash;
     }
-    
+
     @Override
     public int indexOf(Object o) {
         int index = 0;
@@ -52,12 +53,12 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
         }
         return -1;
     }
-    
+
     @Override
     public Iterator<E> iterator() {
         return listIterator();
     }
-    
+
     protected void check(int index) {
         if (index < 0 || index >= size()) {
             throw new IndexOutOfBoundsException("Index out of range: " + index);

@@ -5,19 +5,19 @@ import lock14.datastructures.Deque;
 import lock14.datastructures.SequentialList;
 
 public class SequentialDeque<E> extends SequentialQueue<E> implements Deque<E> {
-    
+
     public SequentialDeque() {
         super();
     }
-    
+
     public SequentialDeque(Collection<E> c) {
         super(c);
     }
-    
+
     public <T extends SequentialList<?>> SequentialDeque(Class<T> backingClass) {
         super(backingClass);
     }
-    
+
     public <T extends SequentialList<?>> SequentialDeque(Collection<E> c, Class<T> backingClass) {
         super(c, backingClass);
     }
@@ -42,7 +42,7 @@ public class SequentialDeque<E> extends SequentialQueue<E> implements Deque<E> {
     @Override
     public E dequeueLast() {
         E e = peekLast();
-        queue.remove(size() -1);
+        queue.remove(size() - 1);
         return e;
     }
 

@@ -13,11 +13,11 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
     private Node<E> tail;
     private int size;
     private int modificationCount;
-    
+
     public LinkedList() {
         this(null);
     }
-    
+
     public LinkedList(Collection<E> c) {
         // create sentinel nodes
         head = new Node<>(null);
@@ -28,7 +28,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
         modificationCount = 0;
         Optional.ofNullable(c).ifPresent(this::addAll);
     }
-    
+
     @Override
     public void add(int index, E element) {
         if (index != size) {
@@ -47,7 +47,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
     public ListIterator<E> listIterator() {
         return listIterator(0);
     }
-    
+
     @Override
     public ListIterator<E> listIterator(int index) {
         if (index != size) {
@@ -61,7 +61,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
         check(index);
         unlink(nodeAt(index));
     }
-    
+
     @Override
     public void set(int index, E element) {
         check(index);
@@ -72,7 +72,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
     public int size() {
         return size;
     }
-    
+
     private void insertBefore(E element, Node<E> node) {
         Node<E> temp = new Node<>(element, node.prev, node);
         node.prev.next = temp;
@@ -80,7 +80,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
         size++;
         modificationCount++;
     }
-    
+
     private void unlink(Node<E> node) {
         node.prev.next = node.next;
         node.next.prev = node.prev;
@@ -89,7 +89,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
         size--;
         modificationCount++;
     }
-    
+
     private Node<E> nodeAt(int index) {
         if (index < size >> 1) {
             Node<E> cur = head.next;
@@ -109,20 +109,20 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
             return cur;
         }
     }
-    
+
     private class LinkedListIterator implements ListIterator<E> {
-        Node<E> lastReturned ;
+        Node<E> lastReturned;
         Node<E> next;
         int index;
         int expectedModCount;
-        
+
         public LinkedListIterator(int index) {
             this.lastReturned = null;
             this.next = nodeAt(index);
             this.index = index;
             this.expectedModCount = modificationCount;
         }
-        
+
         @Override
         public void add(E element) {
             checkForModification();
@@ -198,23 +198,23 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
             }
             lastReturned.data = element;
         }
-        
+
         private void checkForModification() {
             if (expectedModCount != modificationCount) {
                 throw new ConcurrentModificationException();
             }
         }
     }
-    
+
     private static final class Node<E> {
         E data;
         Node<E> prev;
         Node<E> next;
-        
+
         Node(E data) {
             this(data, null, null);
         }
-        
+
         Node(E data, Node<E> prev, Node<E> next) {
             this.data = data;
             this.prev = prev;

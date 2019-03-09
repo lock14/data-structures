@@ -8,19 +8,19 @@ import lock14.datastructures.SequentialList;
 
 public class SequentialQueue<E> extends AbstractQueue<E> {
     protected SequentialList<E> queue;
-    
+
     public SequentialQueue() {
-        this((Collection<E>)null);
+        this((Collection<E>) null);
     }
-    
+
     public SequentialQueue(Collection<E> c) {
         this(c, LinkedList.class);
     }
-    
+
     public <T extends SequentialList<?>> SequentialQueue(Class<T> backingClass) {
         this(null, backingClass);
     }
-    
+
     @SuppressWarnings("unchecked")
     public <T extends SequentialList<?>> SequentialQueue(Collection<E> c, Class<T> backingClass) {
         try {
@@ -31,7 +31,7 @@ public class SequentialQueue<E> extends AbstractQueue<E> {
         }
         Optional.ofNullable(c).ifPresent(this::addAll);
     }
-    
+
     @Override
     public void enqueue(E element) {
         queue.add(element);

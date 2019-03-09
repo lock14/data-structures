@@ -9,7 +9,7 @@ public abstract class AbstractStack<E> extends AbstractCollection<E> implements 
     public void add(E element) {
         push(element);
     }
-    
+
     @Override
     public final boolean equals(Object o) {
         if (o == this) {
@@ -29,12 +29,13 @@ public abstract class AbstractStack<E> extends AbstractCollection<E> implements 
         }
         return false;
     }
-    
+
     @Override
     public final int hashCode() {
         int hash = 1;
-        for (E e : this)
+        for (E e : this) {
             hash = 23 * hash + (e == null ? 0 : e.hashCode());
+        }
         return hash;
     }
 }

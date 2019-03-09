@@ -5,12 +5,12 @@ import java.util.Iterator;
 import lock14.datastructures.Queue;
 
 public abstract class AbstractQueue<E> extends AbstractCollection<E> implements Queue<E> {
-    
+
     @Override
     public void add(E element) {
         enqueue(element);
     }
-    
+
     @Override
     public final boolean equals(Object o) {
         if (o == this) {
@@ -30,15 +30,16 @@ public abstract class AbstractQueue<E> extends AbstractCollection<E> implements 
         }
         return false;
     }
-    
+
     @Override
     public final int hashCode() {
         int hash = 1;
-        for (E e : this)
+        for (E e : this) {
             hash = 37 * hash + (e == null ? 0 : e.hashCode());
+        }
         return hash;
     }
-    
+
     public E remove() {
         return dequeue();
     }

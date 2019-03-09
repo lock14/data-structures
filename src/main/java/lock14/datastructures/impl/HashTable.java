@@ -6,12 +6,12 @@ import lock14.datastructures.Set;
 
 import java.util.Iterator;
 
-public class HashTable<K, V> implements Map<K,V> {
-    public static final int     DEFAULT_SIZE    = 100;
+public class HashTable<K, V> implements Map<K, V> {
+    public static final int DEFAULT_SIZE = 100;
     private static final double MAX_LOAD_FACTOR = 0.7;
 
-    private HashNode<?,?>[]          hashTable;
-    private int                 size;
+    private HashNode<?, ?>[] hashTable;
+    private int size;
 
     public HashTable() {
         this(DEFAULT_SIZE);
@@ -26,11 +26,11 @@ public class HashTable<K, V> implements Map<K,V> {
         if (value == null) {
             throw new NullPointerException();
         }
-        HashNode<K,V> entry = getEntry(key);
+        HashNode<K, V> entry = getEntry(key);
         // key will not be null if we get to this line
         V result = null;
         if (entry == null) {
-            insertEntry(new HashNode<K,V>(key,value));
+            insertEntry(new HashNode<K, V>(key, value));
         } else {
             result = entry.value;
             entry.value = value;
@@ -41,14 +41,14 @@ public class HashTable<K, V> implements Map<K,V> {
     @Override
     public V get(Object key) {
         HashNode<K, V> entry = getEntry(key);
-        return (entry == null)? null : entry.value; 
+        return (entry == null) ? null : entry.value;
     }
-    
+
     @Override
     public boolean containsKey(Object key) {
         return get(key) != null;
     }
-    
+
     @Override
     public boolean containsValue(Object value) {
         if (value == null) {
@@ -64,12 +64,12 @@ public class HashTable<K, V> implements Map<K,V> {
         }
         return false;
     }
-    
-    @SuppressWarnings({"unchecked", "rawtypes"})
+
+    @SuppressWarnings( {"unchecked", "rawtypes"})
     public V remove(Object key) {
         int hash = fixHash(key.hashCode());
         HashNode prev = null;
-        HashNode<?,?> entry = hashTable[hash];
+        HashNode<?, ?> entry = hashTable[hash];
         V result = null;
         while (entry != null) {
             if (entry.key.equals(key)) {
@@ -101,7 +101,7 @@ public class HashTable<K, V> implements Map<K,V> {
     public int size() {
         return size;
     }
-    
+
     public Set<K> keySet() {
         // TODO : implement this
         java.util.Hashtable h;
@@ -120,7 +120,7 @@ public class HashTable<K, V> implements Map<K,V> {
             return HashTable.this.size();
         }
     }
-    
+
     public Set<Pair<K, V>> entrySet() {
         // TODO : implement this
         throw new UnsupportedOperationException();
@@ -142,13 +142,13 @@ public class HashTable<K, V> implements Map<K,V> {
     private int fixHash(int hash) {
         return (hash & 0x7FFFFFFF) % hashTable.length;
     }
-    
+
     @SuppressWarnings("unchecked")
     private HashNode<K, V> getEntry(Object key) {
         // we want null pointer to be thrown if
         // key is null
         int hash = fixHash(key.hashCode());
-        HashNode<?,?> entry = hashTable[hash];
+        HashNode<?, ?> entry = hashTable[hash];
         while (entry != null) {
             if (entry.key.equals(key)) {
                 return (HashNode<K, V>) entry;
@@ -164,7 +164,7 @@ public class HashTable<K, V> implements Map<K,V> {
             resize();
         }
         int hash = fixHash(entry.key.hashCode());
-        HashNode<K,V> current = (HashNode<K, V>) hashTable[hash];
+        HashNode<K, V> current = (HashNode<K, V>) hashTable[hash];
         if (current == null) {
             hashTable[hash] = entry;
         } else {
@@ -176,7 +176,7 @@ public class HashTable<K, V> implements Map<K,V> {
         size++;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings( {"unchecked", "rawtypes"})
     private void resize() {
         HashNode[] newHashTable = new HashNode[hashTable.length + (hashTable.length / 2)];
         HashNode[] oldHashTable = hashTable;
@@ -193,9 +193,9 @@ public class HashTable<K, V> implements Map<K,V> {
         return ((double) size) / ((double) hashTable.length);
     }
 
-    private static final class HashNode<K, V> implements Pair<K, V>{
-        K              key;
-        V              value;
+    private static final class HashNode<K, V> implements Pair<K, V> {
+        K key;
+        V value;
         HashNode<K, V> next;
 
         HashNode(K key, V value) {

@@ -18,7 +18,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
             add(itr.next());
         }
     }
-    
+
     @Override
     public void clear() {
         Iterator<E> itr = iterator();
@@ -27,7 +27,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
             itr.remove();
         }
     }
-    
+
     @Override
     public boolean contains(Object o) {
         Iterator<E> itr = iterator();
@@ -39,7 +39,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
         }
         return false;
     }
-    
+
     @Override
     public boolean containsAll(Collection<?> other) {
         Iterator<?> itr = other.iterator();
@@ -50,12 +50,12 @@ public abstract class AbstractCollection<E> implements Collection<E> {
         }
         return true;
     }
-    
+
     @Override
     public boolean isEmpty() {
         return size() == 0;
     }
-    
+
     @Override
     public void remove(Object o) {
         Iterator<E> itr = iterator();
@@ -67,7 +67,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
             }
         }
     }
-    
+
     @Override
     public void removeAll(Collection<?> other) {
         Iterator<?> itr = other.iterator();
@@ -75,7 +75,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
             remove(itr.next());
         }
     }
-    
+
     @Override
     public void retainAll(Collection<?> other) {
         Iterator<E> itr = this.iterator();
@@ -85,7 +85,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
             }
         }
     }
-    
+
     @Override
     public final String toString() {
         StringBuilder sb = new StringBuilder("[");

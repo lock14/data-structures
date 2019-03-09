@@ -10,17 +10,17 @@ public class ArrayList<E> extends AbstractList<E> implements RandomAccessList<E>
     private Object[] data;
     private int size;
     private int modificationCount;
-    
+
     public ArrayList() {
         this(DEFAULT_CAPACITY);
     }
-    
+
     public ArrayList(int capacity) {
         data = new Object[capacity];
         size = 0;
         modificationCount = 0;
     }
-    
+
     public ArrayList(Collection<E> c) {
         this(c.size());
         Optional.ofNullable(c).ifPresent(this::addAll);
@@ -39,7 +39,7 @@ public class ArrayList<E> extends AbstractList<E> implements RandomAccessList<E>
         size++;
         modificationCount++;
     }
-  
+
     @Override
     @SuppressWarnings("unchecked")
     public E get(int index) {
@@ -51,7 +51,7 @@ public class ArrayList<E> extends AbstractList<E> implements RandomAccessList<E>
     public ListIterator<E> listIterator() {
         return listIterator(0);
     }
-    
+
     @Override
     public ListIterator<E> listIterator(int index) {
         if (index != size) {
@@ -67,7 +67,7 @@ public class ArrayList<E> extends AbstractList<E> implements RandomAccessList<E>
         data[--size] = null;
         modificationCount++;
     }
-    
+
     @Override
     public void set(int index, E element) {
         check(index);
@@ -78,35 +78,35 @@ public class ArrayList<E> extends AbstractList<E> implements RandomAccessList<E>
     public int size() {
         return size;
     }
-    
+
     private void increaseCapacity() {
         int newSize = data.length + (data.length >> 1);
         data = Arrays.copyOf(data, newSize);
     }
-    
+
     private void shiftLeft(int index) {
         for (int i = index; i < size - 1; i++) {
-            data[i] = data[i+1];
+            data[i] = data[i + 1];
         }
     }
-    
+
     private void shiftRight(int index) {
         for (int i = size; i > index; i--) {
             data[i] = data[i - 1];
         }
     }
-    
+
     private class ArrayListIterator implements ListIterator<E> {
         int lastReturned;
         int index;
         int expectedModCount;
-        
+
         public ArrayListIterator(int index) {
             this.lastReturned = -1;
             this.index = index;
             this.expectedModCount = modificationCount;
         }
-        
+
         @Override
         public void add(E element) {
             checkForModification();
@@ -173,15 +173,15 @@ public class ArrayList<E> extends AbstractList<E> implements RandomAccessList<E>
             checkForModification();
             ArrayList.this.set(index, element);
         }
-        
+
         private void checkForModification() {
             if (expectedModCount != modificationCount) {
                 throw new ConcurrentModificationException();
             }
         }
-        
+
     }
-    
+
     public static void main(String[] args) {
         ArrayList<Integer> list = new ArrayList<>();
         ArrayList<Integer> list2 = new ArrayList<>();
