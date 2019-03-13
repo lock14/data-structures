@@ -2,6 +2,7 @@ package lock14.datastructures.impl;
 
 import lock14.datastructures.Edge;
 import lock14.datastructures.Graph;
+import lock14.datastructures.Pair;
 
 import java.util.AbstractSet;
 import java.util.Collections;
@@ -13,8 +14,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public abstract class AbstactGraph<V> implements Graph<V> {
-    private Map<V, Set<V>> graph;
-    private Map<V, Set<V>> predecessors;
+    private GraphMap<V> graph;
     private int edgeCount;
 
     public AbstactGraph(boolean directed) {
@@ -22,10 +22,10 @@ public abstract class AbstactGraph<V> implements Graph<V> {
     }
 
     public AbstactGraph(Iterable<Edge<V>> edges, boolean directed) {
-        graph = new HashMap<>();
-        predecessors = graph;
         if (directed) {
-            predecessors = new HashMap<>();
+            graph = new DirectedGraphMap<>();
+        } else {
+            graph = new UndirectedGraphMap<>();
         }
         edgeCount = 0;
         for (Edge<V> edge : edges) {
@@ -35,14 +35,16 @@ public abstract class AbstactGraph<V> implements Graph<V> {
 
     @Override
     public void addEdge(V u, V v) {
-        addVertex(v);
-        addVertex(u);
-        graph.get(u).add(v);
-        predecessors.get(v).add(u);
-        edgeCount++;
-        // self loops counted twice
-        if (u.equals(v)) {
+        if (!containsEdge(u, v)) {
+            addVertex(v);
+            addVertex(u);
+            graph.successors(u).add(v);
+            graph.predecessors(v).add(u);
             edgeCount++;
+            // self loops counted twice
+            if (u.equals(v)) {
+                edgeCount++;
+            }
         }
     }
 
@@ -54,16 +56,13 @@ public abstract class AbstactGraph<V> implements Graph<V> {
     @Override
     public void addVertex(V v) {
         if (!contains(v)) {
-            graph.put(v, new HashSet<>());
-        }
-        if (!predecessors.containsKey(v)) {
-            predecessors.put(v, new HashSet<>());
+            graph.add(v);
         }
     }
 
     @Override
     public boolean contains(Object v) {
-        return graph.containsKey(v);
+        return graph.contains(v);
     }
 
     @Override
@@ -124,13 +123,13 @@ public abstract class AbstactGraph<V> implements Graph<V> {
     @Override
     public Set<V> getAdjacent(Object v) {
         validateVertex(v);
-        return Collections.unmodifiableSet(graph.get(v));
+        return Collections.unmodifiableSet(graph.successors(v));
     }
 
     @Override
     public Set<V> getAdjacentIn(Object v) {
         validateVertex(v);
-        return Collections.unmodifiableSet(predecessors.get(v));
+        return Collections.unmodifiableSet(graph.predecessors(v));
     }
 
     @Override
@@ -141,27 +140,27 @@ public abstract class AbstactGraph<V> implements Graph<V> {
     @Override
     public void removeVertex(V v) {
         if (contains(v)) {
-            // remove from graph
+            // remove each edge this vertex is the start of
+            for (V u : getAdjacent(v)) {
+                removeEdge(v, u);
+            }
             graph.remove(v);
-            predecessors.remove(v);
-            // remove from each other vertex's adjacency list
+            // remove each edge this vertex is the end of
             for (V u : vertices()) {
-                graph.get(u).remove(v);
-                predecessors.get(u).remove(v);
+                removeEdge(u, v);
             }
         }
     }
 
     public void removeEdge(V u, V v) {
-        // removing both vertices will suffice
-        validateVertex(u);
-        validateVertex(v);
-        graph.get(u).remove(v);
-        predecessors.get(v).remove(u);
-        edgeCount--;
-        // self loops counted twice
-        if (Objects.equals(u, v)) {
+        if (containsEdge(u, v)) {
+            graph.successors(u).remove(v);
+            graph.predecessors(v).remove(u);
             edgeCount--;
+            // self loops counted twice
+            if (Objects.equals(u, v)) {
+                edgeCount--;
+            }
         }
     }
 
@@ -171,12 +170,12 @@ public abstract class AbstactGraph<V> implements Graph<V> {
 
     @Override
     public int vertexCount() {
-        return graph.keySet().size();
+        return vertices().size();
     }
 
     @Override
     public Set<V> vertices() {
-        return Collections.unmodifiableSet(graph.keySet());
+        return Collections.unmodifiableSet(graph.vertices());
     }
 
     @Override
@@ -189,13 +188,12 @@ public abstract class AbstactGraph<V> implements Graph<V> {
         }
         AbstactGraph<?> that = (AbstactGraph<?>) o;
         return edgeCount == that.edgeCount &&
-               Objects.equals(graph, that.graph) &&
-               Objects.equals(predecessors, that.predecessors);
+               Objects.equals(graph, that.graph);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(graph, predecessors, edgeCount);
+        return Objects.hash(graph, edgeCount);
     }
 
     @Override
@@ -208,6 +206,125 @@ public abstract class AbstactGraph<V> implements Graph<V> {
     protected void validateVertex(Object v) {
         if (!contains(v)) {
             throw new IllegalArgumentException("Vertex " + v + " is not in this graph!");
+        }
+    }
+
+    private interface GraphMap<V> {
+        void add(V v);
+        boolean contains(Object v);
+        Set<V> predecessors(Object v);
+        void remove(V v);
+        Set<V> successors(Object v);
+        Set<V> vertices();
+    }
+
+    private static final class UndirectedGraphMap<V> implements GraphMap<V> {
+        private Map<V, Set<V>> map;
+
+        UndirectedGraphMap() {
+            map = new HashMap<>();
+        }
+
+        @Override
+        public void add(V v) {
+            map.put(v, new HashSet<>());
+        }
+
+        @Override
+        public boolean contains(Object v) {
+            return map.containsKey(v);
+        }
+
+        @Override
+        public void remove(V v) {
+            map.remove(v);
+        }
+
+        @Override
+        public Set<V> predecessors(Object v) {
+            return map.get(v);
+        }
+
+        @Override
+        public Set<V> successors(Object v) {
+            return map.get(v);
+        }
+
+        @Override
+        public Set<V> vertices() {
+            return map.keySet();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof UndirectedGraphMap)) {
+                return false;
+            }
+            UndirectedGraphMap<?> that = (UndirectedGraphMap<?>) o;
+            return Objects.equals(map, that.map);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(map);
+        }
+    }
+
+    private static final class DirectedGraphMap<V> implements GraphMap<V> {
+        private Map<V, Pair<Set<V>, Set<V>>> map;
+
+        public DirectedGraphMap() {
+            map = new HashMap<>();
+        }
+
+        @Override
+        public void add(V v) {
+            map.put(v, new TwoTuple<>(new HashSet<>(), new HashSet<>()));
+        }
+
+        @Override
+        public boolean contains(Object v) {
+            return map.containsKey(v);
+        }
+
+        @Override
+        public Set<V> predecessors(Object v) {
+            return map.get(v).second();
+        }
+
+        @Override
+        public void remove(V v) {
+            map.remove(v);
+        }
+
+        @Override
+        public Set<V> successors(Object v) {
+            return map.get(v).first();
+        }
+
+        @Override
+        public Set<V> vertices() {
+            return map.keySet();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof DirectedGraphMap)) {
+                return false;
+            }
+            DirectedGraphMap<?> that = (DirectedGraphMap<?>) o;
+            return Objects.equals(map, that.map);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(map);
         }
     }
 }
