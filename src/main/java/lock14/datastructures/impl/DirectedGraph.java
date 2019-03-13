@@ -3,18 +3,21 @@ package lock14.datastructures.impl;
 import lock14.datastructures.Edge;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Set;
 
 // a simple implementation of an directed graph
 public class DirectedGraph<V> extends AbstactGraph<V> {
+    private Map<V, Set<V>> predecessors;
 
     public DirectedGraph() {
-        super();
+        super(true);
     }
 
     public DirectedGraph(Iterable<Edge<V>> edges) {
-        super(edges);
+        super(edges, true);
     }
 
     @Override
@@ -53,7 +56,7 @@ public class DirectedGraph<V> extends AbstactGraph<V> {
             boolean nextVFound = findNextV();
             while (uIterator.hasNext() && !nextVFound) {
                 nextU = uIterator.next();
-                vIterator = graph.get(nextU).iterator();
+                vIterator = getAdjacent(nextU).iterator();
                 nextVFound = findNextV();
             }
             if (!nextVFound) {
@@ -102,7 +105,7 @@ public class DirectedGraph<V> extends AbstactGraph<V> {
             if (o == this) {
                 return true;
             }
-            if (!(o instanceof DirectedGraph.DirectedEdge)) {
+            if (!(o instanceof DirectedEdge)) {
                 return false;
             }
             DirectedEdge<?> other = (DirectedEdge<?>) o;

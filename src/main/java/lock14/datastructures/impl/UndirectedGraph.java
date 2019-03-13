@@ -12,20 +12,11 @@ import java.util.Set;
 public class UndirectedGraph<V> extends AbstactGraph<V> {
 
     public UndirectedGraph() {
-        super();
+        super(false);
     }
 
     public UndirectedGraph(Iterable<Edge<V>> edges) {
-        super(edges);
-    }
-
-    @Override
-    public void addEdge(V u, V v) {
-        addVertex(u);
-        addVertex(v);
-        graph.get(u).add(v);
-        graph.get(v).add(u);
-        edgeCount++;
+        super(edges, false);
     }
 
     @Override
@@ -70,7 +61,7 @@ public class UndirectedGraph<V> extends AbstactGraph<V> {
                     visited.add(nextU);
                 }
                 nextU = uIterator.next();
-                vIterator = graph.get(nextU).iterator();
+                vIterator = getAdjacent(nextU).iterator();
                 nextVFound = findNextV();
             }
             if (!nextVFound) {
@@ -122,7 +113,7 @@ public class UndirectedGraph<V> extends AbstactGraph<V> {
             if (o == this) {
                 return true;
             }
-            if (!(o instanceof UndirectedGraph.UndirectedEdge)) {
+            if (!(o instanceof UndirectedEdge)) {
                 return false;
             }
             UndirectedEdge<?> other = (UndirectedEdge<?>) o;

@@ -104,7 +104,6 @@ public class HashTable<K, V> implements Map<K, V> {
 
     public Set<K> keySet() {
         // TODO : implement this
-        java.util.Hashtable h;
         throw new UnsupportedOperationException();
     }
 
