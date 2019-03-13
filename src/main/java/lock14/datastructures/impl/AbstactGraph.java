@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+// TODO: switch to my implementation of Map and Set
+//       once they are finished
 public abstract class AbstactGraph<V> implements Graph<V> {
     private GraphMap<V> graph;
     private int edgeCount;

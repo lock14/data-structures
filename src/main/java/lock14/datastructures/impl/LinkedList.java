@@ -34,7 +34,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
         if (index != size) {
             check(index);
         }
-        insertBefore(element, nodeAt(index));
+        insertBefore(nodeAt(index), element);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
         return size;
     }
 
-    private void insertBefore(E element, Node<E> node) {
+    private void insertBefore(Node<E> node, E element) {
         Node<E> temp = new Node<>(element, node.prev, node);
         node.prev.next = temp;
         node.prev = temp;
@@ -126,7 +126,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
         @Override
         public void add(E element) {
             checkForModification();
-            insertBefore(element, next);
+            insertBefore(next, element);
             expectedModCount++;
         }
 
