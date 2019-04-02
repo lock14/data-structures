@@ -24,13 +24,23 @@ public interface Graph<V> {
 
     public int edgeCount();
 
+    public Graph<V> emptyGraph();
+
     public Set<Edge<V>> edges();
+
+    public Set<Edge<V>> incidentEdges(V v);
+
+    public Set<Edge<V>> incidentEdgesIn(V v);
+
+    public Set<Edge<V>> incidentEdgesOut(V v);
 
     public Set<V> getAdjacent(Object v);
 
     public Set<V> getAdjacentIn(Object v);
 
     public Set<V> getAdjacentOut(Object v);
+
+    public boolean isDirected();
 
     public void removeEdge(V u, V v);
 

@@ -7,6 +7,8 @@ public interface Edge<V> {
 
     public V getV();
 
+    public boolean isOrdered();
+
     public static <V> Edge<V> of(V u, V v) {
         return new SimpleEdge<>(u, v);
     }
@@ -28,6 +30,11 @@ public interface Edge<V> {
         @Override
         public V getV() {
             return v;
+        }
+
+        @Override
+        public boolean isOrdered() {
+            return true;
         }
 
         @Override
