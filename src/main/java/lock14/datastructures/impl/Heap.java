@@ -81,15 +81,15 @@ public class Heap<E extends Comparable<? super E>> extends AbstractQueue<E> {
     }
 
     private void siftDown(int parent) {
-        while (hasLeft(parent)) {
+        boolean heapConditionViolated = true;
+        while (hasLeft(parent) && heapConditionViolated) {
             int target = left(parent);
             if (hasRight(parent) && heapCondition(right(parent), left(parent))) {
                 target = right(parent);
             }
-            if (!heapCondition(parent, target)) {
+            heapConditionViolated = !heapCondition(parent, target);
+            if (heapConditionViolated) {
                 swap(parent, target);
-            } else {
-                break;
             }
             parent = target;
         }
