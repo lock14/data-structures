@@ -1,7 +1,6 @@
 package lock14.datastructures.impl;
 
 import java.util.*;
-
 import lock14.datastructures.Collection;
 import lock14.datastructures.RandomAccessList;
 

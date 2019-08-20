@@ -15,14 +15,12 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.function.BinaryOperator;
 
-
 // TODO: switch all auxiliary data-structures over to my implementations
-//       once they are finished.
+// once they are finished.
 public final class Graphs {
 
     // make utility class non-instantiable
-    private Graphs() {
-    }
+    private Graphs() {}
 
     public static <V> boolean breadthFirstSearch(Graph<V> graph, V start, V end) {
         if (Objects.equals(start, end)) {
@@ -102,7 +100,8 @@ public final class Graphs {
     }
 
     public static <V, L extends Comparable<? super L>> List<V> dijkstraShortestPath(LabledGraph<V, L> graph, V start,
-                                                                            V end, L zero, BinaryOperator<L> plus) {
+                                                                                    V end, L zero,
+                                                                                    BinaryOperator<L> plus) {
         Set<V> visited = new HashSet<>();
         Map<V, V> previous = new HashMap<>();
         Map<V, L> cost = new HashMap<>();
@@ -158,7 +157,8 @@ public final class Graphs {
     }
 
     public static <V> LabledGraph<V, BigInteger> dijkstraAllShortestPathsBigInteger(
-            LabledGraph<V, BigInteger> graph, V start) {
+                                                                                    LabledGraph<V, BigInteger> graph,
+                                                                                    V start) {
         return dijkstraAllShortestPaths(graph, start, BigInteger.ZERO, BigInteger::add);
     }
 
@@ -171,12 +171,15 @@ public final class Graphs {
     }
 
     public static <V> LabledGraph<V, BigDecimal> dijkstraAllShortestPathsBigDecimal(
-            LabledGraph<V, BigDecimal> graph, V start) {
+                                                                                    LabledGraph<V, BigDecimal> graph,
+                                                                                    V start) {
         return dijkstraAllShortestPaths(graph, start, BigDecimal.ZERO, BigDecimal::add);
     }
 
     public static <V, L extends Comparable<? super L>> LabledGraph<V, L> dijkstraAllShortestPaths(
-            LabledGraph<V, L> graph, V start, L zero, BinaryOperator<L> plus) {
+                                                                                                  LabledGraph<V, L> graph,
+                                                                                                  V start, L zero,
+                                                                                                  BinaryOperator<L> plus) {
         Set<V> visited = new HashSet<>();
         Map<V, V> previous = new HashMap<>();
         Map<V, L> cost = new HashMap<>();
@@ -257,19 +260,19 @@ public final class Graphs {
     }
 
     private static <V> boolean visit(Graph<V> graph, V start, Set<V> visited, Set<V> visiting, LinkedList<V> stack) {
-       if (!visited.contains(start)) {
-           if (visiting.contains(start)) {
-               // cycle exists: not a DAG
-               return false;
-           }
-           visiting.add(start);
-           for (V neighbor : graph.getAdjacentOut(start)) {
-               visit(graph, neighbor, visited, visiting, stack);
-           }
-           visited.add(start);
-           stack.push(start);
-       }
-       return true;
+        if (!visited.contains(start)) {
+            if (visiting.contains(start)) {
+                // cycle exists: not a DAG
+                return false;
+            }
+            visiting.add(start);
+            for (V neighbor : graph.getAdjacentOut(start)) {
+                visit(graph, neighbor, visited, visiting, stack);
+            }
+            visited.add(start);
+            stack.push(start);
+        }
+        return true;
     }
 
     private static <V, L extends Comparable<? super L>> VertexLabel<V, L> vertexLabel(V v, L label) {
@@ -294,4 +297,3 @@ public final class Graphs {
         }
     }
 }
-

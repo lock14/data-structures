@@ -1,7 +1,6 @@
 package lock14.datastructures.impl;
 
 import java.util.Iterator;
-
 import lock14.datastructures.List;
 
 public abstract class AbstractList<E> extends AbstractCollection<E> implements List<E> {

@@ -3,7 +3,6 @@ package lock14.datastructures.impl;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Optional;
-
 import lock14.datastructures.Collection;
 import lock14.datastructures.List;
 import lock14.datastructures.Stack;

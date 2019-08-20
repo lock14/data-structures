@@ -1,7 +1,6 @@
 package lock14.datastructures.impl;
 
 import lock14.datastructures.Pair;
-
 import java.util.Objects;
 
 public class TwoTuple<T1, T2> implements Pair<T1, T2> {
@@ -16,7 +15,7 @@ public class TwoTuple<T1, T2> implements Pair<T1, T2> {
     public T1 first() {
         return fst;
     }
-    
+
     public T2 second() {
         return snd;
     }
@@ -25,7 +24,7 @@ public class TwoTuple<T1, T2> implements Pair<T1, T2> {
         if (o instanceof TwoTuple) {
             TwoTuple<?, ?> other = (TwoTuple<?, ?>) o;
             return Objects.equals(this.fst, other.fst)
-                   && Objects.equals(this.snd, other.snd);
+                    && Objects.equals(this.snd, other.snd);
         }
         return false;
     }

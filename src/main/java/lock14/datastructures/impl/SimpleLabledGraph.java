@@ -10,17 +10,18 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-
 import lock14.datastructures.Edge;
 import lock14.datastructures.Graph;
 import lock14.datastructures.LabledEdge;
 import lock14.datastructures.LabledGraph;
 
 /**
- * Models a graph that does not allow more than one edge between any two vertices, and each edge
- * has a corresponding getLabel (not necessarily numeric).
+ * Models a graph that does not allow more than one edge between any two vertices, and each edge has
+ * a corresponding getLabel (not necessarily numeric).
  *
- * Can either be directed or undirected, and allows self loops (e.g. a getVertex has an edge to itself)
+ * Can either be directed or undirected, and allows self loops (e.g. a getVertex has an edge to
+ * itself)
+ * 
  * @param <V> the getVertex type
  * @param <L> the getLabel type
  */
@@ -164,7 +165,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
             NodeData<V, L> nodeData = graph.get(v);
 
             @Override
-            public Iterator<LabledEdge <V, L>> iterator() {
+            public Iterator<LabledEdge<V, L>> iterator() {
                 return new Iterator<LabledEdge<V, L>>() {
                     Iterator<V> predecessors = nodeData.predecessors().iterator();
 
@@ -204,7 +205,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
             NodeData<V, L> nodeData = graph.get(v);
 
             @Override
-            public Iterator<LabledEdge <V, L>> iterator() {
+            public Iterator<LabledEdge<V, L>> iterator() {
                 return new Iterator<LabledEdge<V, L>>() {
                     Iterator<V> sucessors = nodeData.successors().iterator();
 
@@ -333,8 +334,8 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
         }
         SimpleLabledGraph<?, ?> other = (SimpleLabledGraph<?, ?>) o;
         return this.directed == other.directed &&
-               this.edgeCount == other.edgeCount &&
-               Objects.equals(this.graph, other.graph);
+                this.edgeCount == other.edgeCount &&
+                Objects.equals(this.graph, other.graph);
     }
 
     @Override
@@ -346,7 +347,6 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
     public String toString() {
         return "V: " + vertices() + ", " + "E: " + edges();
     }
-
 
     private LabledEdge<V, L> edge(V v, V next, L label) {
         return directed ? new DirectedLabeledEdge<>(v, next, label) : new UndirectedLabeledEdge<>(v, next, label);
@@ -502,7 +502,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
             }
             DirectedNodeData<?, ?> that = (DirectedNodeData<?, ?>) o;
             return Objects.equals(successorValues, that.successorValues) &&
-                   Objects.equals(predecessors, that.predecessors);
+                    Objects.equals(predecessors, that.predecessors);
         }
 
         @Override
@@ -607,7 +607,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
             }
             DirectedLabeledEdge<?, ?> other = (DirectedLabeledEdge<?, ?>) o;
             return Objects.equals(this.u, other.u) && Objects.equals(this.v, other.v)
-                   && Objects.equals(this.label, other.label);
+                    && Objects.equals(this.label, other.label);
         }
 
         @Override
@@ -685,7 +685,6 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
         private final V v;
         private final L label;
 
-
         public UndirectedLabeledEdge(V u, V v, L label) {
             this.u = u;
             this.v = v;
@@ -727,8 +726,8 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
             }
             UndirectedLabeledEdge<?, ?> other = (UndirectedLabeledEdge<?, ?>) o;
             return ((Objects.equals(this.u, other.u) && Objects.equals(this.v, other.v))
-                   || (Objects.equals(this.u, other.v) && Objects.equals(this.v, other.u)))
-                   && Objects.equals(this.label, other.label);
+                    || (Objects.equals(this.u, other.v) && Objects.equals(this.v, other.u)))
+                    && Objects.equals(this.label, other.label);
         }
 
         @Override

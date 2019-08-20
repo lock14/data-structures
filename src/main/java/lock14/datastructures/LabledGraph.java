@@ -4,8 +4,8 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * An interface to denote a graph whose edges are labeled.
- * The getLabel does not need to be numeric, it could be any type.
+ * An interface to denote a graph whose edges are labeled. The getLabel does not need to be numeric,
+ * it could be any type.
  *
  * @param <V> the vertex type
  * @param <L> the label type

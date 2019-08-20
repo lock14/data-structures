@@ -1,7 +1,6 @@
 package lock14.datastructures.impl;
 
 import java.util.Iterator;
-
 import lock14.datastructures.Set;
 
 public abstract class AbstractSet<E> extends AbstractCollection<E> implements Set<E> {

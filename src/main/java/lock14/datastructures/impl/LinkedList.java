@@ -4,7 +4,6 @@ import java.util.ConcurrentModificationException;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import lock14.datastructures.Collection;
 import lock14.datastructures.SequentialList;
 

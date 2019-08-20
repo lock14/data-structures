@@ -3,7 +3,6 @@ package lock14.datastructures.impl;
 import lock14.datastructures.Edge;
 import lock14.datastructures.Graph;
 import lock14.datastructures.Pair;
-
 import java.util.AbstractSet;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,11 +14,12 @@ import java.util.Objects;
 import java.util.Set;
 
 // TODO: switch to my implementation of Map and Set
-//       once they are finished
+// once they are finished
 /**
  * Models a graph that does not allow more than one edge between any two vertices
  *
- * Can either be directed or undirected, and allows self loops (e.g. a getVertex has an edge to itself)
+ * Can either be directed or undirected, and allows self loops (e.g. a getVertex has an edge to
+ * itself)
  */
 public class SimpleGraph<V> implements Graph<V> {
     private GraphMap<V> graph;
@@ -289,7 +289,7 @@ public class SimpleGraph<V> implements Graph<V> {
         }
         SimpleGraph<?> that = (SimpleGraph<?>) o;
         return edgeCount == that.edgeCount &&
-               Objects.equals(graph, that.graph);
+                Objects.equals(graph, that.graph);
     }
 
     @Override
@@ -326,10 +326,15 @@ public class SimpleGraph<V> implements Graph<V> {
 
     private interface GraphMap<V> {
         void add(V v);
+
         boolean contains(Object v);
+
         Set<V> predecessors(Object v);
+
         void remove(V v);
+
         Set<V> successors(Object v);
+
         Set<V> vertices();
     }
 
@@ -638,7 +643,7 @@ public class SimpleGraph<V> implements Graph<V> {
             }
             UndirectedEdge<?> other = (UndirectedEdge<?>) o;
             return (Objects.equals(this.u, other.u) && Objects.equals(this.v, other.v))
-                   || (Objects.equals(this.u, other.v) && Objects.equals(this.v, other.u));
+                    || (Objects.equals(this.u, other.v) && Objects.equals(this.v, other.u));
         }
 
         @Override

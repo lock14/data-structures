@@ -3,7 +3,6 @@ package lock14.datastructures.impl;
 import lock14.datastructures.Map;
 import lock14.datastructures.Pair;
 import lock14.datastructures.Set;
-
 import java.util.Iterator;
 
 public class HashTable<K, V> implements Map<K, V> {
@@ -65,7 +64,7 @@ public class HashTable<K, V> implements Map<K, V> {
         return false;
     }
 
-    @SuppressWarnings( {"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public V remove(Object key) {
         int hash = fixHash(key.hashCode());
         HashNode prev = null;
@@ -175,7 +174,7 @@ public class HashTable<K, V> implements Map<K, V> {
         size++;
     }
 
-    @SuppressWarnings( {"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void resize() {
         HashNode[] newHashTable = new HashNode[hashTable.length + (hashTable.length / 2)];
         HashNode[] oldHashTable = hashTable;

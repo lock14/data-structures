@@ -4,19 +4,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
 import org.junit.Test;
-
 import lock14.datastructures.impl.ArrayList;
 import lock14.datastructures.impl.LinkedList;
 
 public class ArrayListTest {
-    
+
     @Test
     public void emptyListTest() {
         ArrayList<Integer> list = new ArrayList<>();
@@ -28,7 +25,7 @@ public class ArrayListTest {
         assertEquals(list, new ArrayList<>());
         assertEquals(list, new LinkedList<>());
     }
-    
+
     @Test
     public void testSize() {
         ArrayList<Integer> list = new ArrayList<>();
@@ -39,7 +36,7 @@ public class ArrayListTest {
             assertEquals(++j, list.size());
         }
     }
-    
+
     @Test
     public void traverseIteratorTest() {
         ArrayList<Integer> list = collect(IntStream.range(0, 100));
@@ -48,7 +45,7 @@ public class ArrayListTest {
             assertEquals(n, i++);
         }
     }
-    
+
     @Test
     public void testToString() {
         ArrayList<Integer> list = new ArrayList<>();
@@ -56,15 +53,15 @@ public class ArrayListTest {
         list = collect(IntStream.range(0, 10));
         assertEquals("[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]", list.toString());
     }
-    
-    @Test 
+
+    @Test
     public void testIndexOf() {
         ArrayList<Integer> list = collect(IntStream.range(0, 100));
         for (int i = 0; i < list.size(); i++) {
             assertEquals(i, list.indexOf(i));
         }
     }
-    
+
     @Test
     public void testClear() {
         ArrayList<Integer> list = collect(IntStream.range(0, 100));
@@ -74,7 +71,7 @@ public class ArrayListTest {
         assertEquals(0, list.size());
         assertTrue(list.isEmpty());
     }
-    
+
     @Test
     public void testEquals() {
         ArrayList<Integer> list1 = collect(IntStream.range(0, 100));
@@ -83,14 +80,17 @@ public class ArrayListTest {
         assertNotEquals(list1, new ArrayList<>());
         assertNotEquals(list1, collect(IntStream.range(0, 99)));
     }
-    
+
     private static ArrayList<Integer> collect(IntStream stream) {
         return collect(stream.boxed());
     }
-    
+
     private static <E> ArrayList<E> collect(Stream<E> stream) {
-        return stream.collect(Collector.of((Supplier<ArrayList<E>>)ArrayList::new,
-                                    (list, element) -> list.add(element),
-                                    (list1, list2) -> { list1.addAll(list2); return list1; }));
+        return stream.collect(Collector.of((Supplier<ArrayList<E>>) ArrayList::new,
+                                           (list, element) -> list.add(element),
+                                           (list1, list2) -> {
+                                               list1.addAll(list2);
+                                               return list1;
+                                           }));
     }
 }
