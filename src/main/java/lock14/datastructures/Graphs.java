@@ -67,39 +67,39 @@ public final class Graphs {
         return false;
     }
 
-    public static <V> List<V> dijkstraShortestPathByte(LabledGraph<V, Byte> graph, V start, V end) {
+    public static <V> List<V> dijkstraShortestPathByte(LabeledGraph<V, Byte> graph, V start, V end) {
         return dijkstraShortestPath(graph, start, end, (byte) 0, (a, b) -> (byte) (a + b));
     }
 
-    public static <V> List<V> dijkstraShortestPathShort(LabledGraph<V, Short> graph, V start, V end) {
+    public static <V> List<V> dijkstraShortestPathShort(LabeledGraph<V, Short> graph, V start, V end) {
         return dijkstraShortestPath(graph, start, end, (short) 0, (a, b) -> (short) (a + b));
     }
 
-    public static <V> List<V> dijkstraShortestPathInt(LabledGraph<V, Integer> graph, V start, V end) {
+    public static <V> List<V> dijkstraShortestPathInt(LabeledGraph<V, Integer> graph, V start, V end) {
         return dijkstraShortestPath(graph, start, end, 0, Integer::sum);
     }
 
-    public static <V> List<V> dijkstraShortestPathLong(LabledGraph<V, Long> graph, V start, V end) {
+    public static <V> List<V> dijkstraShortestPathLong(LabeledGraph<V, Long> graph, V start, V end) {
         return dijkstraShortestPath(graph, start, end, 0L, Long::sum);
     }
 
-    public static <V> List<V> dijkstraShortestPathBigInteger(LabledGraph<V, BigInteger> graph, V start, V end) {
+    public static <V> List<V> dijkstraShortestPathBigInteger(LabeledGraph<V, BigInteger> graph, V start, V end) {
         return dijkstraShortestPath(graph, start, end, BigInteger.ZERO, BigInteger::add);
     }
 
-    public static <V> List<V> dijkstraShortestPathFloat(LabledGraph<V, Float> graph, V start, V end) {
+    public static <V> List<V> dijkstraShortestPathFloat(LabeledGraph<V, Float> graph, V start, V end) {
         return dijkstraShortestPath(graph, start, end, (float) 0.0, Float::sum);
     }
 
-    public static <V> List<V> dijkstraShortestPathDouble(LabledGraph<V, Double> graph, V start, V end) {
+    public static <V> List<V> dijkstraShortestPathDouble(LabeledGraph<V, Double> graph, V start, V end) {
         return dijkstraShortestPath(graph, start, end, 0.0, Double::sum);
     }
 
-    public static <V> List<V> dijkstraShortestPathBigDecimal(LabledGraph<V, BigDecimal> graph, V start, V end) {
+    public static <V> List<V> dijkstraShortestPathBigDecimal(LabeledGraph<V, BigDecimal> graph, V start, V end) {
         return dijkstraShortestPath(graph, start, end, BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public static <V, L extends Comparable<? super L>> List<V> dijkstraShortestPath(LabledGraph<V, L> graph, V start,
+    public static <V, L extends Comparable<? super L>> List<V> dijkstraShortestPath(LabeledGraph<V, L> graph, V start,
                                                                                     V end, L zero,
                                                                                     BinaryOperator<L> plus) {
         Set<V> visited = new HashSet<>();
@@ -140,44 +140,44 @@ public final class Graphs {
         return path;
     }
 
-    public static <V> LabledGraph<V, Byte> dijkstraAllShortestPathsByte(LabledGraph<V, Byte> graph, V start) {
+    public static <V> LabeledGraph<V, Byte> dijkstraAllShortestPathsByte(LabeledGraph<V, Byte> graph, V start) {
         return dijkstraAllShortestPaths(graph, start, (byte) 0, (a, b) -> (byte) (a + b));
     }
 
-    public static <V> LabledGraph<V, Short> dijkstraAllShortestPathsShort(LabledGraph<V, Short> graph, V start) {
+    public static <V> LabeledGraph<V, Short> dijkstraAllShortestPathsShort(LabeledGraph<V, Short> graph, V start) {
         return dijkstraAllShortestPaths(graph, start, (short) 0, (a, b) -> (short) (a + b));
     }
 
-    public static <V> LabledGraph<V, Integer> dijkstraAllShortestPathsInt(LabledGraph<V, Integer> graph, V start) {
+    public static <V> LabeledGraph<V, Integer> dijkstraAllShortestPathsInt(LabeledGraph<V, Integer> graph, V start) {
         return dijkstraAllShortestPaths(graph, start, 0, Integer::sum);
     }
 
-    public static <V> LabledGraph<V, Long> dijkstraAllShortestPathsLong(LabledGraph<V, Long> graph, V start) {
+    public static <V> LabeledGraph<V, Long> dijkstraAllShortestPathsLong(LabeledGraph<V, Long> graph, V start) {
         return dijkstraAllShortestPaths(graph, start, 0L, Long::sum);
     }
 
-    public static <V> LabledGraph<V, BigInteger> dijkstraAllShortestPathsBigInteger(
-                                                                                    LabledGraph<V, BigInteger> graph,
+    public static <V> LabeledGraph<V, BigInteger> dijkstraAllShortestPathsBigInteger(
+                                                                                    LabeledGraph<V, BigInteger> graph,
                                                                                     V start) {
         return dijkstraAllShortestPaths(graph, start, BigInteger.ZERO, BigInteger::add);
     }
 
-    public static <V> LabledGraph<V, Float> dijkstraAllShortestPathsFloat(LabledGraph<V, Float> graph, V start) {
+    public static <V> LabeledGraph<V, Float> dijkstraAllShortestPathsFloat(LabeledGraph<V, Float> graph, V start) {
         return dijkstraAllShortestPaths(graph, start, (float) 0.0, Float::sum);
     }
 
-    public static <V> LabledGraph<V, Double> dijkstraAllShortestPathsDouble(LabledGraph<V, Double> graph, V start) {
+    public static <V> LabeledGraph<V, Double> dijkstraAllShortestPathsDouble(LabeledGraph<V, Double> graph, V start) {
         return dijkstraAllShortestPaths(graph, start, 0.0, Double::sum);
     }
 
-    public static <V> LabledGraph<V, BigDecimal> dijkstraAllShortestPathsBigDecimal(
-                                                                                    LabledGraph<V, BigDecimal> graph,
+    public static <V> LabeledGraph<V, BigDecimal> dijkstraAllShortestPathsBigDecimal(
+                                                                                    LabeledGraph<V, BigDecimal> graph,
                                                                                     V start) {
         return dijkstraAllShortestPaths(graph, start, BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public static <V, L extends Comparable<? super L>> LabledGraph<V, L> dijkstraAllShortestPaths(
-                                                                                                  LabledGraph<V, L> graph,
+    public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> dijkstraAllShortestPaths(
+                                                                                                  LabeledGraph<V, L> graph,
                                                                                                   V start, L zero,
                                                                                                   BinaryOperator<L> plus) {
         Set<V> visited = new HashSet<>();
@@ -207,31 +207,31 @@ public final class Graphs {
         }
 
         // we return a tree which contains all shortest paths from start to any other node
-        LabledGraph<V, L> tree = (LabledGraph<V, L>) graph.emptyGraph();
+        LabeledGraph<V, L> tree = (LabeledGraph<V, L>) graph.emptyGraph();
         previous.forEach((v, u) -> tree.addEdge(u, v, graph.label(u, v).orElse(zero)));
         return tree;
     }
 
-    public static <V, L extends Comparable<? super L>> LabledGraph<V, L> minimumSpanningTree(LabledGraph<V, L> graph) {
+    public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> minimumSpanningTree(LabeledGraph<V, L> graph) {
         return minimumSpanningTree(graph, graph.vertices().iterator().next());
     }
 
-    public static <V, L extends Comparable<? super L>> LabledGraph<V, L> minimumSpanningTree(LabledGraph<V, L> graph, V start) {
+    public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> minimumSpanningTree(LabeledGraph<V, L> graph, V start) {
         if (graph.isDirected()) {
             throw new IllegalArgumentException("cannot construct minimum spanning tree for a directed graph!");
         }
 
         Set<V> visited = new HashSet<>();
-        LabledGraph<V, L> minimumSpanningTree = (LabledGraph<V, L>) graph.emptyGraph();
-        PriorityQueue<LabledEdge<V, L>> queue = new PriorityQueue<>(Comparator.comparing(LabledEdge::getLabel));
+        LabeledGraph<V, L> minimumSpanningTree = (LabeledGraph<V, L>) graph.emptyGraph();
+        PriorityQueue<LabeledEdge<V, L>> queue = new PriorityQueue<>(Comparator.comparing(LabeledEdge::getLabel));
         visited.add(start);
-        queue.addAll(graph.incidentLabledEdges(start));
+        queue.addAll(graph.incidentLabeledEdges(start));
 
         while (!queue.isEmpty()) {
-            LabledEdge<V, L> edge = queue.remove();
+            LabeledEdge<V, L> edge = queue.remove();
             if (!visited.contains(edge.getU()) || !visited.contains(edge.getV())) {
                 visited.add(edge.getU());
-                for (LabledEdge<V, L> edge2 : graph.incidentLabledEdges(edge.getV())) {
+                for (LabeledEdge<V, L> edge2 : graph.incidentLabeledEdges(edge.getV())) {
                     if (!visited.contains(edge2.getV())) {
                         queue.add(edge2);
                     }

@@ -21,8 +21,10 @@ public class ArrayList<E> extends AbstractList<E> implements RandomAccessList<E>
     }
 
     public ArrayList(Collection<E> c) {
-        this(c.size());
-        Optional.ofNullable(c).ifPresent(this::addAll);
+        this(c == null || c.size() < DEFAULT_CAPACITY ? DEFAULT_CAPACITY : c.size());
+        if (c != null) {
+            addAll(c);
+        }
     }
 
     @Override

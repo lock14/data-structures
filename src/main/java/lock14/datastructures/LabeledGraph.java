@@ -1,7 +1,6 @@
 package lock14.datastructures;
 
-import lock14.datastructures.impl.SimpleGraph;
-import lock14.datastructures.impl.SimpleLabledGraph;
+import lock14.datastructures.impl.SimpleLabeledGraph;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -14,25 +13,25 @@ import java.util.Set;
  * @param <V> the vertex type
  * @param <L> the label type
  */
-public interface LabledGraph<V, L> extends Graph<V> {
+public interface LabeledGraph<V, L> extends Graph<V> {
 
     void addEdge(V u, V v, L label);
 
     void addEdge(Edge<V> edge, L label);
 
-    void addEdge(LabledEdge<V, L> edge);
+    void addEdge(LabeledEdge<V, L> edge);
 
     Optional<L> label(V u, V v);
 
     Optional<L> label(Edge<V> edge);
 
-    Set<LabledEdge<V, L>> labledEdges();
+    Set<LabeledEdge<V, L>> labeledEdges();
 
-    Set<LabledEdge<V, L>> incidentLabledEdges(V v);
+    Set<LabeledEdge<V, L>> incidentLabeledEdges(V v);
 
-    Set<LabledEdge<V, L>> incidentLabledEdgesOut(V v);
+    Set<LabeledEdge<V, L>> incidentLabeledEdgesOut(V v);
 
-    Set<LabledEdge<V, L>> incidentLabledEdgesIn(V v);
+    Set<LabeledEdge<V, L>> incidentLabeledEdgesIn(V v);
 
     static <V, L> Builder<V, L> directed() {
         return new Builder<>(true);
@@ -44,7 +43,7 @@ public interface LabledGraph<V, L> extends Graph<V> {
 
     final class Builder<V, L> {
         private boolean directed;
-        private Set<LabledEdge<V, L>> edges;
+        private Set<LabeledEdge<V, L>> edges;
 
         private Builder(boolean directed) {
             this.directed = directed;
@@ -52,21 +51,21 @@ public interface LabledGraph<V, L> extends Graph<V> {
         }
 
         public <V1 extends V, L1 extends L> Builder<V1, L1> withEdge(V1 u, V1 v, L1 label) {
-            return withEdge(LabledEdge.of(u, v, label));
+            return withEdge(LabeledEdge.of(u, v, label));
         }
 
-        public <V1 extends V, L1 extends L> Builder<V1, L1> withEdge(LabledEdge<V1, L1> edge) {
-            edges.add((LabledEdge) edge);
+        public <V1 extends V, L1 extends L> Builder<V1, L1> withEdge(LabeledEdge<V1, L1> edge) {
+            edges.add((LabeledEdge) edge);
             return (Builder<V1, L1>) this;
         }
 
-        public <V1 extends V, L1 extends L> Builder<V1, L1> withEdges(Set<LabledEdge<V1, L1>> edges) {
+        public <V1 extends V, L1 extends L> Builder<V1, L1> withEdges(Set<LabeledEdge<V1, L1>> edges) {
             this.edges.addAll((Set) edges);
             return (Builder<V1, L1>) this;
         }
 
-        public LabledGraph<V, L> build() {
-            return new SimpleLabledGraph<V, L>(directed, edges);
+        public LabeledGraph<V, L> build() {
+            return new SimpleLabeledGraph<V, L>(directed, edges);
         }
     }
 }

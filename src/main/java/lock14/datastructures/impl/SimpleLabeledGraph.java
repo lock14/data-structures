@@ -2,8 +2,8 @@ package lock14.datastructures.impl;
 
 import lock14.datastructures.Edge;
 import lock14.datastructures.Graph;
-import lock14.datastructures.LabledEdge;
-import lock14.datastructures.LabledGraph;
+import lock14.datastructures.LabeledEdge;
+import lock14.datastructures.LabeledGraph;
 
 import java.util.AbstractSet;
 import java.util.Collections;
@@ -26,20 +26,20 @@ import java.util.Set;
  * @param <V> the getVertex type
  * @param <L> the getLabel type
  */
-public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
+public class SimpleLabeledGraph<V, L> implements LabeledGraph<V, L> {
     private final Map<V, NodeData<V, L>> graph;
     private final boolean directed;
     private int edgeCount;
 
-    public SimpleLabledGraph(boolean directed) {
+    public SimpleLabeledGraph(boolean directed) {
         this(directed, Collections.emptyList());
     }
 
-    public SimpleLabledGraph(boolean directed, Iterable<LabledEdge<V, L>> edges) {
+    public SimpleLabeledGraph(boolean directed, Iterable<LabeledEdge<V, L>> edges) {
         this.graph = new HashMap<>();
         this.directed = directed;
         edgeCount = 0;
-        for (LabledEdge<V, L> edge : edges) {
+        for (LabeledEdge<V, L> edge : edges) {
             addEdge(edge);
         }
     }
@@ -59,7 +59,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
     }
 
     @Override
-    public void addEdge(LabledEdge<V, L> edge) {
+    public void addEdge(LabeledEdge<V, L> edge) {
         addEdge(edge.getU(), edge.getV(), edge.getLabel());
     }
 
@@ -119,12 +119,12 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
     @Override
     @SuppressWarnings("unchecked")
     public Set<Edge<V>> edges() {
-        return (Set) labledEdges();
+        return (Set) labeledEdges();
     }
 
     @Override
     public Graph<V> emptyGraph() {
-        return new SimpleLabledGraph<>(directed);
+        return new SimpleLabeledGraph<>(directed);
     }
 
     @Override
@@ -147,34 +147,34 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
     @Override
     @SuppressWarnings("unchecked")
     public Set<Edge<V>> incidentEdges(V v) {
-        return (Set) incidentLabledEdges(v);
+        return (Set) incidentLabeledEdges(v);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Set<Edge<V>> incidentEdgesIn(V v) {
-        return (Set) incidentLabledEdgesIn(v);
+        return (Set) incidentLabeledEdgesIn(v);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Set<Edge<V>> incidentEdgesOut(V v) {
-        return (Set) incidentLabledEdgesOut(v);
+        return (Set) incidentLabeledEdgesOut(v);
     }
 
     @Override
-    public Set<LabledEdge<V, L>> incidentLabledEdges(V v) {
-        return incidentLabledEdgesOut(v);
+    public Set<LabeledEdge<V, L>> incidentLabeledEdges(V v) {
+        return incidentLabeledEdgesOut(v);
     }
 
     @Override
-    public Set<LabledEdge<V, L>> incidentLabledEdgesIn(V v) {
-        return new AbstractSet<LabledEdge<V, L>>() {
+    public Set<LabeledEdge<V, L>> incidentLabeledEdgesIn(V v) {
+        return new AbstractSet<LabeledEdge<V, L>>() {
             NodeData<V, L> nodeData = graph.get(v);
 
             @Override
-            public Iterator<LabledEdge<V, L>> iterator() {
-                return new Iterator<LabledEdge<V, L>>() {
+            public Iterator<LabeledEdge<V, L>> iterator() {
+                return new Iterator<LabeledEdge<V, L>>() {
                     Iterator<V> predecessors = nodeData.predecessors().iterator();
 
                     @Override
@@ -183,7 +183,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
                     }
 
                     @Override
-                    public LabledEdge<V, L> next() {
+                    public LabeledEdge<V, L> next() {
                         V predecessor = predecessors.next();
                         return edge(predecessor, v, graph.get(predecessor).label(v));
                     }
@@ -208,13 +208,13 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
     }
 
     @Override
-    public Set<LabledEdge<V, L>> incidentLabledEdgesOut(V v) {
-        return new AbstractSet<LabledEdge<V, L>>() {
+    public Set<LabeledEdge<V, L>> incidentLabeledEdgesOut(V v) {
+        return new AbstractSet<LabeledEdge<V, L>>() {
             NodeData<V, L> nodeData = graph.get(v);
 
             @Override
-            public Iterator<LabledEdge<V, L>> iterator() {
-                return new Iterator<LabledEdge<V, L>>() {
+            public Iterator<LabeledEdge<V, L>> iterator() {
+                return new Iterator<LabeledEdge<V, L>>() {
                     Iterator<V> sucessors = nodeData.successors().iterator();
 
                     @Override
@@ -223,7 +223,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
                     }
 
                     @Override
-                    public LabledEdge<V, L> next() {
+                    public LabeledEdge<V, L> next() {
                         V successor = sucessors.next();
                         return edge(v, successor, nodeData.label(successor));
                     }
@@ -298,11 +298,11 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
     }
 
     @Override
-    public Set<LabledEdge<V, L>> labledEdges() {
-        return new AbstractSet<LabledEdge<V, L>>() {
+    public Set<LabeledEdge<V, L>> labeledEdges() {
+        return new AbstractSet<LabeledEdge<V, L>>() {
 
             @Override
-            public Iterator<LabledEdge<V, L>> iterator() {
+            public Iterator<LabeledEdge<V, L>> iterator() {
                 return edgeIterator();
             }
 
@@ -337,10 +337,10 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof SimpleLabledGraph)) {
+        if (!(o instanceof SimpleLabeledGraph)) {
             return false;
         }
-        SimpleLabledGraph<?, ?> other = (SimpleLabledGraph<?, ?>) o;
+        SimpleLabeledGraph<?, ?> other = (SimpleLabeledGraph<?, ?>) o;
         return this.directed == other.directed &&
                this.edgeCount == other.edgeCount &&
                Objects.equals(this.graph, other.graph);
@@ -356,11 +356,11 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
         return "V: " + vertices() + ", " + "E: " + edges();
     }
 
-    private LabledEdge<V, L> edge(V v, V next, L label) {
+    private LabeledEdge<V, L> edge(V v, V next, L label) {
         return directed ? new DirectedLabeledEdge<>(v, next, label) : new UndirectedLabeledEdge<>(v, next, label);
     }
 
-    private Iterator<LabledEdge<V, L>> edgeIterator() {
+    private Iterator<LabeledEdge<V, L>> edgeIterator() {
         return directed ? new DirectedEdgeIterator() : new UndirectedEdgeIterator();
     }
 
@@ -378,21 +378,21 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
         }
     }
 
-    private static interface NodeData<V, L> {
+    private interface NodeData<V, L> {
 
-        public void addPredecessor(V v, L label);
+        void addPredecessor(V v, L label);
 
-        public void addSuccessor(V v, L label);
+        void addSuccessor(V v, L label);
 
-        public Set<V> predecessors();
+        Set<V> predecessors();
 
-        public void removePredecessor(V v);
+        void removePredecessor(V v);
 
-        public void removeSuccessor(V v);
+        void removeSuccessor(V v);
 
-        public Set<V> successors();
+        Set<V> successors();
 
-        public L label(V v);
+        L label(V v);
     }
 
     private static class UndirectedNodeData<V, L> implements NodeData<V, L> {
@@ -519,7 +519,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
         }
     }
 
-    public class DirectedEdgeIterator implements Iterator<LabledEdge<V, L>> {
+    public class DirectedEdgeIterator implements Iterator<LabeledEdge<V, L>> {
         private Iterator<V> uIterator;
         private Iterator<V> vIterator;
         private V nextU;
@@ -536,11 +536,11 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
         }
 
         @Override
-        public LabledEdge<V, L> next() {
+        public LabeledEdge<V, L> next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            LabledEdge<V, L> edge = new DirectedLabeledEdge<>(nextU, nextV, label(nextU, nextV).get());
+            LabeledEdge<V, L> edge = new DirectedLabeledEdge<>(nextU, nextV, label(nextU, nextV).get());
             findNextUAndV();
             return edge;
         }
@@ -569,7 +569,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
         }
     }
 
-    public static final class DirectedLabeledEdge<V, L> implements LabledEdge<V, L> {
+    public static final class DirectedLabeledEdge<V, L> implements LabeledEdge<V, L> {
         private final V u;
         private final V v;
         private final L label;
@@ -610,7 +610,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
             if (o == this) {
                 return true;
             }
-            if (!(o instanceof SimpleLabledGraph.DirectedLabeledEdge)) {
+            if (!(o instanceof SimpleLabeledGraph.DirectedLabeledEdge)) {
                 return false;
             }
             DirectedLabeledEdge<?, ?> other = (DirectedLabeledEdge<?, ?>) o;
@@ -629,7 +629,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
         }
     }
 
-    public class UndirectedEdgeIterator implements Iterator<LabledEdge<V, L>> {
+    public class UndirectedEdgeIterator implements Iterator<LabeledEdge<V, L>> {
         private Set<V> visited;
         private Iterator<V> uIterator;
         private Iterator<V> vIterator;
@@ -648,11 +648,11 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
         }
 
         @Override
-        public LabledEdge<V, L> next() {
+        public LabeledEdge<V, L> next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            LabledEdge<V, L> edge = new UndirectedLabeledEdge<>(nextU, nextV, label(nextU, nextV).get());
+            LabeledEdge<V, L> edge = new UndirectedLabeledEdge<>(nextU, nextV, label(nextU, nextV).get());
             // move to next u and v nodes
             findNextUAndV();
             return edge;
@@ -688,7 +688,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
         }
     }
 
-    public static final class UndirectedLabeledEdge<V, L> implements LabledEdge<V, L> {
+    public static final class UndirectedLabeledEdge<V, L> implements LabeledEdge<V, L> {
         private final V u;
         private final V v;
         private final L label;
