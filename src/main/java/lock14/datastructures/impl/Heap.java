@@ -183,6 +183,7 @@ public class Heap<E extends Comparable<? super E>> extends AbstractQueue<E> {
             delete(lastReturned);
             lastReturned = -1;
             index--;
+            expectedModCount++;
         }
 
         private void checkForModification() {
