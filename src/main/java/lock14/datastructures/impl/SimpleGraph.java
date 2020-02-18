@@ -25,18 +25,20 @@ public class SimpleGraph<V> implements Graph<V> {
     private GraphMap<V> graph;
     private int edgeCount;
     private boolean directed;
+    private boolean allowSelfLoops;
 
     public SimpleGraph(boolean directed) {
-        this(Collections.emptyList(), directed);
+        this(directed, Collections.emptyList());
     }
 
-    public SimpleGraph(Iterable<Edge<V>> edges, boolean directed) {
+    public SimpleGraph(boolean directed, Iterable<Edge<V>> edges) {
         if (directed) {
             graph = new DirectedGraphMap<>();
         } else {
             graph = new UndirectedGraphMap<>();
         }
         this.directed = directed;
+        this.allowSelfLoops = false;
         edgeCount = 0;
         for (Edge<V> edge : edges) {
             addEdge(edge);
@@ -45,16 +47,20 @@ public class SimpleGraph<V> implements Graph<V> {
 
     @Override
     public void addEdge(V u, V v) {
+        if (Objects.equals(u, v)) {
+            if (!allowSelfLoops) {
+                throw new IllegalStateException(String.format("self loops are not allowed: u=%s, v=%s", u, v));
+            }
+            // self loops counted twice
+            edgeCount++;
+        }
         if (!containsEdge(u, v)) {
             addVertex(v);
             addVertex(u);
             graph.successors(u).add(v);
             graph.predecessors(v).add(u);
             edgeCount++;
-            // self loops counted twice
-            if (u.equals(v)) {
-                edgeCount++;
-            }
+
         }
     }
 

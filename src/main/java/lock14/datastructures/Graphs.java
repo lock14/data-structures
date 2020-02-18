@@ -213,6 +213,10 @@ public final class Graphs {
     }
 
     public static <V, L extends Comparable<? super L>> LabledGraph<V, L> minimumSpanningTree(LabledGraph<V, L> graph) {
+        return minimumSpanningTree(graph, graph.vertices().iterator().next());
+    }
+
+    public static <V, L extends Comparable<? super L>> LabledGraph<V, L> minimumSpanningTree(LabledGraph<V, L> graph, V start) {
         if (graph.isDirected()) {
             throw new IllegalArgumentException("cannot construct minimum spanning tree for a directed graph!");
         }
@@ -220,8 +224,6 @@ public final class Graphs {
         Set<V> visited = new HashSet<>();
         LabledGraph<V, L> minimumSpanningTree = (LabledGraph<V, L>) graph.emptyGraph();
         PriorityQueue<LabledEdge<V, L>> queue = new PriorityQueue<>(Comparator.comparing(LabledEdge::getLabel));
-
-        V start = graph.vertices().iterator().next();
         visited.add(start);
         queue.addAll(graph.incidentLabledEdges(start));
 

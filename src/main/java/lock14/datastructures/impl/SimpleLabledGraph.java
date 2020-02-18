@@ -1,5 +1,10 @@
 package lock14.datastructures.impl;
 
+import lock14.datastructures.Edge;
+import lock14.datastructures.Graph;
+import lock14.datastructures.LabledEdge;
+import lock14.datastructures.LabledGraph;
+
 import java.util.AbstractSet;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,18 +15,14 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import lock14.datastructures.Edge;
-import lock14.datastructures.Graph;
-import lock14.datastructures.LabledEdge;
-import lock14.datastructures.LabledGraph;
 
 /**
  * Models a graph that does not allow more than one edge between any two vertices, and each edge has
  * a corresponding getLabel (not necessarily numeric).
- *
+ * <p>
  * Can either be directed or undirected, and allows self loops (e.g. a getVertex has an edge to
  * itself)
- * 
+ *
  * @param <V> the getVertex type
  * @param <L> the getLabel type
  */
@@ -31,9 +32,16 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
     private int edgeCount;
 
     public SimpleLabledGraph(boolean directed) {
+        this(directed, Collections.emptyList());
+    }
+
+    public SimpleLabledGraph(boolean directed, Iterable<LabledEdge<V, L>> edges) {
         this.graph = new HashMap<>();
         this.directed = directed;
-        this.edgeCount = 0;
+        edgeCount = 0;
+        for (LabledEdge<V, L> edge : edges) {
+            addEdge(edge);
+        }
     }
 
     @Override
@@ -334,8 +342,8 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
         }
         SimpleLabledGraph<?, ?> other = (SimpleLabledGraph<?, ?>) o;
         return this.directed == other.directed &&
-                this.edgeCount == other.edgeCount &&
-                Objects.equals(this.graph, other.graph);
+               this.edgeCount == other.edgeCount &&
+               Objects.equals(this.graph, other.graph);
     }
 
     @Override
@@ -502,7 +510,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
             }
             DirectedNodeData<?, ?> that = (DirectedNodeData<?, ?>) o;
             return Objects.equals(successorValues, that.successorValues) &&
-                    Objects.equals(predecessors, that.predecessors);
+                   Objects.equals(predecessors, that.predecessors);
         }
 
         @Override
@@ -607,7 +615,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
             }
             DirectedLabeledEdge<?, ?> other = (DirectedLabeledEdge<?, ?>) o;
             return Objects.equals(this.u, other.u) && Objects.equals(this.v, other.v)
-                    && Objects.equals(this.label, other.label);
+                   && Objects.equals(this.label, other.label);
         }
 
         @Override
@@ -727,7 +735,7 @@ public class SimpleLabledGraph<V, L> implements LabledGraph<V, L> {
             UndirectedLabeledEdge<?, ?> other = (UndirectedLabeledEdge<?, ?>) o;
             return ((Objects.equals(this.u, other.u) && Objects.equals(this.v, other.v))
                     || (Objects.equals(this.u, other.v) && Objects.equals(this.v, other.u)))
-                    && Objects.equals(this.label, other.label);
+                   && Objects.equals(this.label, other.label);
         }
 
         @Override

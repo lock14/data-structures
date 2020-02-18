@@ -1,54 +1,93 @@
 package lock14.datastructures;
 
+import lock14.datastructures.impl.SimpleGraph;
+
+import java.util.HashSet;
 import java.util.Set;
 
 public interface Graph<V> {
 
-    public void addEdge(V u, V v);
+    void addEdge(V u, V v);
 
-    public void addEdge(Edge<V> edge);
+    void addEdge(Edge<V> edge);
 
-    public void addVertex(V v);
+    void addVertex(V v);
 
-    public boolean contains(Object vertex);
+    boolean contains(Object vertex);
 
-    public boolean containsEdge(Object u, Object v);
+    boolean containsEdge(Object u, Object v);
 
-    public boolean containsEdge(Edge<?> edge);
+    boolean containsEdge(Edge<?> edge);
 
-    public int degree(V v);
+    int degree(V v);
 
-    public int degreeIn(V v);
+    int degreeIn(V v);
 
-    public int degreeOut(V v);
+    int degreeOut(V v);
 
-    public int edgeCount();
+    int edgeCount();
 
-    public Graph<V> emptyGraph();
+    Graph<V> emptyGraph();
 
-    public Set<Edge<V>> edges();
+    Set<Edge<V>> edges();
 
-    public Set<Edge<V>> incidentEdges(V v);
+    Set<Edge<V>> incidentEdges(V v);
 
-    public Set<Edge<V>> incidentEdgesIn(V v);
+    Set<Edge<V>> incidentEdgesIn(V v);
 
-    public Set<Edge<V>> incidentEdgesOut(V v);
+    Set<Edge<V>> incidentEdgesOut(V v);
 
-    public Set<V> getAdjacent(Object v);
+    Set<V> getAdjacent(Object v);
 
-    public Set<V> getAdjacentIn(Object v);
+    Set<V> getAdjacentIn(Object v);
 
-    public Set<V> getAdjacentOut(Object v);
+    Set<V> getAdjacentOut(Object v);
 
-    public boolean isDirected();
+    boolean isDirected();
 
-    public void removeEdge(V u, V v);
+    void removeEdge(V u, V v);
 
-    public void removeEdge(Edge<V> edge);
+    void removeEdge(Edge<V> edge);
 
-    public void removeVertex(V v);
+    void removeVertex(V v);
 
-    public int vertexCount();
+    int vertexCount();
 
-    public Set<V> vertices();
+    Set<V> vertices();
+
+    static <V> Builder<V> directed() {
+        return new Builder<>(true);
+    }
+
+    static <V> Builder<V> undirected() {
+        return new Builder<>(false);
+    }
+
+    final class Builder<V> {
+        private boolean directed;
+        private Set<Edge<V>> edges;
+
+        private Builder(boolean directed) {
+            this.directed = directed;
+            this.edges = new HashSet<>();
+        }
+
+        public <V1 extends V> Builder<V1> withEdge(V1 u, V1 v) {
+            return withEdge(Edge.of(u, v));
+        }
+
+        public <V1 extends V> Builder<V1> withEdge(Edge<V1> edge) {
+            edges.add((Edge) edge);
+            return (Builder<V1>) this;
+        }
+
+        public <V1 extends V> Builder<V1> withEdges(Set<Edge<V1>> edges) {
+            this.edges.addAll((Set) edges);
+            return (Builder<V1>) this;
+        }
+
+        public Graph<V> build() {
+            return new SimpleGraph<>(directed, edges);
+        }
+    }
 }
