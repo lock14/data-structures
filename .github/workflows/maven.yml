@@ -16,4 +16,4 @@ jobs:
     - name: Build with Maven
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn -B -e -Dmaven.wagon.http.pool=false clean deploy -Dtoken=GITHUB_TOKEN
+      run: mvn -B -e -Dmaven.wagon.http.pool=false clean javadoc:jar source:jar deploy -Dtoken=GITHUB_TOKEN
