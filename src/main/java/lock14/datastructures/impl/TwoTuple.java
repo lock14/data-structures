@@ -22,9 +22,9 @@ public class TwoTuple<T1, T2> implements Pair<T1, T2> {
 
     public boolean equals(Object o) {
         if (o instanceof TwoTuple) {
-            TwoTuple<?, ?> other = (TwoTuple<?, ?>) o;
-            return Objects.equals(this.fst, other.fst)
-                    && Objects.equals(this.snd, other.snd);
+            Pair<?, ?> other = (Pair<?, ?>) o;
+            return Objects.equals(this.first(), other.first())
+                    && Objects.equals(this.second(), other.second());
         }
         return false;
     }

@@ -2,6 +2,7 @@ package lock14.datastructures;
 
 import org.junit.Test;
 
+import java.util.ConcurrentModificationException;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
@@ -79,6 +80,14 @@ public abstract class CollectionTest<T> {
             assertTrue(items.remove(item));
         }
         assertTrue(items.isEmpty());
+    }
+
+    @Test(expected = ConcurrentModificationException.class)
+    public void testConcurrentModification() {
+        Collection<T> collection = collect(Stream.generate(tSupplier).limit(RNG.nextInt(TEST_SIZE)));
+        for (T t : collection) {
+            collection.remove(t);
+        }
     }
 
     private Collection<T> collect(Stream<T> stream) {
