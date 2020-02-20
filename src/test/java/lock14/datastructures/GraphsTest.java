@@ -1,10 +1,8 @@
 package lock14.datastructures;
 
 import static org.junit.Assert.assertEquals;
-
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Test;
 
 public class GraphsTest {
@@ -28,7 +26,7 @@ public class GraphsTest {
     }
 
     @Test
-    public void djikstraShortestPathTest() {
+    public void dijkstraShortestPathTest() {
         LabeledGraph<String, Integer> graph = LabeledGraph.undirected()
                                                           .withEdge("a", "b", 7)
                                                           .withEdge("a", "c", 3)
@@ -42,7 +40,7 @@ public class GraphsTest {
     }
 
     @Test
-    public void djikstraShortestPathTest2() {
+    public void dijkstraShortestPathTest2() {
         LabeledGraph<String, Integer> graph = LabeledGraph.directed()
                                                           .withEdge("a", "b", 8)
                                                           .withEdge("a", "f", 10)

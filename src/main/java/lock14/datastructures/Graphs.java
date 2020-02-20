@@ -16,39 +16,42 @@ import java.util.Set;
 import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
 
-// TODO: switch all auxiliary data-structures over to my implementations
-// once they are finished.
 public final class Graphs {
 
     // make utility class non-instantiable
-    private Graphs() {
-    }
+    private Graphs() {}
 
-    public static <V> boolean breadthFirstSearch(Graph<V> graph, V start, V end) {
+    ///////////////////////////////////////////////////////////////////////////
+    // Breadth First Search
+    ///////////////////////////////////////////////////////////////////////////
+
+    public static <V> List<V> breadthFirstSearch(Graph<V> graph, V start, V end) {
         if (Objects.equals(start, end)) {
-            return true;
+            return Collections.emptyList();
         }
-        Set<V> visited = new HashSet<>();
-        Set<V> visiting = new HashSet<>();
+        VertexProperties<V> properties = new VertexProperties<>();
         Queue<V> queue = new LinkedList<>();
-        visiting.add(start);
+        properties.markVisited(start);
         queue.add(start);
         while (!queue.isEmpty()) {
             V u = queue.remove();
+            if (Objects.equals(u, end)) {
+                break;
+            }
             for (V v : graph.getAdjacent(u)) {
-                if (!visited.contains(v) && !visiting.contains(v)) {
-                    if (Objects.equals(v, end)) {
-                        return true;
-                    }
-                    visiting.add(v);
+                if (!properties.visited(v)) {
+                    properties.markVisited(v);
+                    properties.setParent(v, u);
                     queue.add(v);
                 }
             }
-            visiting.remove(u);
-            visited.add(u);
         }
-        return false;
+        return constructPath(properties, start, end);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Depth First Search
+    ///////////////////////////////////////////////////////////////////////////
 
     public static <V> boolean depthFirstSearch(Graph<V> graph, V start, V end) {
         return depthFirstSearch(graph, start, end, new HashSet<>());
@@ -68,6 +71,10 @@ public final class Graphs {
         }
         return false;
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Dijkstra Shortest Path Convenience Methods
+    ///////////////////////////////////////////////////////////////////////////
 
     public static <V> List<V> dijkstraShortestPathByte(LabeledGraph<V, Byte> graph, V start, V end) {
         return dijkstraShortestPath(graph, start, end, (byte) 0, (a, b) -> (byte) (a + b));
@@ -104,17 +111,60 @@ public final class Graphs {
     public static <V, L extends Comparable<? super L>> List<V> dijkstraShortestPath(LabeledGraph<V, L> graph, V start,
                                                                                     V end, L zero,
                                                                                     BinaryOperator<L> plus) {
-        VertexProperties<V> properties = dijkstra(graph, plus, v -> Objects.equals(v, end), start, zero);
-
-        LinkedList<V> path = new LinkedList<>();
-        V cur = end;
-        while (!Objects.equals(cur, start)) {
-            path.addFirst(cur);
-            cur = properties.getParent(cur);
-        }
-        path.addFirst(start);
-        return path;
+        return constructPath(dijkstra(graph, plus, v -> Objects.equals(v, end), start, zero), start, end);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Dijkstra All Shortest Paths Convenience Methods
+    ///////////////////////////////////////////////////////////////////////////
+
+    public static <V> LabeledGraph<V, Byte> dijkstraAllShortestPathsByte(LabeledGraph<V, Byte> graph, V start) {
+        return dijkstraAllShortestPaths(graph, start, (byte) 0, (a, b) -> (byte) (a + b));
+    }
+
+    public static <V> LabeledGraph<V, Short> dijkstraAllShortestPathsShort(LabeledGraph<V, Short> graph, V start) {
+        return dijkstraAllShortestPaths(graph, start, (short) 0, (a, b) -> (short) (a + b));
+    }
+
+    public static <V> LabeledGraph<V, Integer> dijkstraAllShortestPathsInt(LabeledGraph<V, Integer> graph, V start) {
+        return dijkstraAllShortestPaths(graph, start, 0, Integer::sum);
+    }
+
+    public static <V> LabeledGraph<V, Long> dijkstraAllShortestPathsLong(LabeledGraph<V, Long> graph, V start) {
+        return dijkstraAllShortestPaths(graph, start, 0L, Long::sum);
+    }
+
+    public static <V> LabeledGraph<V, BigInteger> dijkstraAllShortestPathsBigInteger(
+                                                                                     LabeledGraph<V, BigInteger> graph,
+                                                                                     V start) {
+        return dijkstraAllShortestPaths(graph, start, BigInteger.ZERO, BigInteger::add);
+    }
+
+    public static <V> LabeledGraph<V, Float> dijkstraAllShortestPathsFloat(LabeledGraph<V, Float> graph, V start) {
+        return dijkstraAllShortestPaths(graph, start, (float) 0.0, Float::sum);
+    }
+
+    public static <V> LabeledGraph<V, Double> dijkstraAllShortestPathsDouble(LabeledGraph<V, Double> graph, V start) {
+        return dijkstraAllShortestPaths(graph, start, 0.0, Double::sum);
+    }
+
+    public static <V> LabeledGraph<V, BigDecimal> dijkstraAllShortestPathsBigDecimal(
+                                                                                     LabeledGraph<V, BigDecimal> graph,
+                                                                                     V start) {
+        return dijkstraAllShortestPaths(graph, start, BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> dijkstraAllShortestPaths(
+                                                                                                   LabeledGraph<V, L> graph,
+                                                                                                   V start, L zero,
+                                                                                                   BinaryOperator<L> plus) {
+        // we return a tree which contains all shortest paths from start to any other node
+        return constructTree(graph, dijkstra(graph, plus, v -> false, start, zero), start);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // The actual Dijkstra algorithm
+    ///////////////////////////////////////////////////////////////////////////
 
     private static <V, L extends Comparable<? super L>> VertexProperties<V> dijkstra(LabeledGraph<V, L> graph,
                                                                                      BinaryOperator<L> plus,
@@ -154,61 +204,12 @@ public final class Graphs {
         return properties;
     }
 
-    public static <V> LabeledGraph<V, Byte> dijkstraAllShortestPathsByte(LabeledGraph<V, Byte> graph, V start) {
-        return dijkstraAllShortestPaths(graph, start, (byte) 0, (a, b) -> (byte) (a + b));
-    }
-
-    public static <V> LabeledGraph<V, Short> dijkstraAllShortestPathsShort(LabeledGraph<V, Short> graph, V start) {
-        return dijkstraAllShortestPaths(graph, start, (short) 0, (a, b) -> (short) (a + b));
-    }
-
-    public static <V> LabeledGraph<V, Integer> dijkstraAllShortestPathsInt(LabeledGraph<V, Integer> graph, V start) {
-        return dijkstraAllShortestPaths(graph, start, 0, Integer::sum);
-    }
-
-    public static <V> LabeledGraph<V, Long> dijkstraAllShortestPathsLong(LabeledGraph<V, Long> graph, V start) {
-        return dijkstraAllShortestPaths(graph, start, 0L, Long::sum);
-    }
-
-    public static <V> LabeledGraph<V, BigInteger> dijkstraAllShortestPathsBigInteger(
-            LabeledGraph<V, BigInteger> graph,
-            V start) {
-        return dijkstraAllShortestPaths(graph, start, BigInteger.ZERO, BigInteger::add);
-    }
-
-    public static <V> LabeledGraph<V, Float> dijkstraAllShortestPathsFloat(LabeledGraph<V, Float> graph, V start) {
-        return dijkstraAllShortestPaths(graph, start, (float) 0.0, Float::sum);
-    }
-
-    public static <V> LabeledGraph<V, Double> dijkstraAllShortestPathsDouble(LabeledGraph<V, Double> graph, V start) {
-        return dijkstraAllShortestPaths(graph, start, 0.0, Double::sum);
-    }
-
-    public static <V> LabeledGraph<V, BigDecimal> dijkstraAllShortestPathsBigDecimal(
-            LabeledGraph<V, BigDecimal> graph,
-            V start) {
-        return dijkstraAllShortestPaths(graph, start, BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> dijkstraAllShortestPaths(
-            LabeledGraph<V, L> graph,
-            V start, L zero,
-            BinaryOperator<L> plus) {
-        VertexProperties<V> properties = dijkstra(graph, plus, v -> false, start, zero);
-        // we return a tree which contains all shortest paths from start to any other node
-        LabeledGraph<V, L> tree = (LabeledGraph<V, L>) graph.emptyGraph();
-        graph.vertices()
-             .stream()
-             .filter(v -> !Objects.equals(v, start))
-             .forEach(v -> {
-                 V u = properties.getParent(v);
-                 tree.addEdge(u, v, graph.label(u, v).orElse(zero));
-             });
-        return tree;
-    }
+    ///////////////////////////////////////////////////////////////////////////
+    // Minimum Spanning Tree
+    ///////////////////////////////////////////////////////////////////////////
 
     public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> minimumSpanningTree(
-            LabeledGraph<V, L> graph) {
+                                                                                              LabeledGraph<V, L> graph) {
         return minimumSpanningTree(graph, graph.vertices().iterator().next());
     }
 
@@ -218,27 +219,31 @@ public final class Graphs {
             throw new IllegalArgumentException("cannot construct minimum spanning tree for a directed graph!");
         }
 
-        Set<V> visited = new HashSet<>();
+        VertexProperties<V> properties = new VertexProperties<>();
         LabeledGraph<V, L> minimumSpanningTree = (LabeledGraph<V, L>) graph.emptyGraph();
         PriorityQueue<LabeledEdge<V, L>> queue = new PriorityQueue<>(Comparator.comparing(LabeledEdge::getLabel));
-        visited.add(start);
+        properties.markVisited(start);
         queue.addAll(graph.incidentLabeledEdges(start));
 
         while (!queue.isEmpty()) {
             LabeledEdge<V, L> edge = queue.remove();
-            if (!visited.contains(edge.getU()) || !visited.contains(edge.getV())) {
-                visited.add(edge.getU());
+            if (!properties.visited(edge.getU()) || !properties.visited(edge.getV())) {
+                properties.markVisited(edge.getU());
                 for (LabeledEdge<V, L> edge2 : graph.incidentLabeledEdges(edge.getV())) {
-                    if (!visited.contains(edge2.getV())) {
+                    if (!properties.visited(edge2.getV())) {
                         queue.add(edge2);
                     }
                 }
-                visited.add(edge.getV());
+                properties.markVisited(edge.getV());
                 minimumSpanningTree.addEdge(edge);
             }
         }
         return minimumSpanningTree;
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Topological Sort
+    ///////////////////////////////////////////////////////////////////////////
 
     public static <V> List<V> topologicalOrder(Graph<V> graph) {
         if (!graph.isDirected()) {
@@ -272,6 +277,38 @@ public final class Graphs {
             stack.push(start);
         }
         return true;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Utility methods/classes
+    ///////////////////////////////////////////////////////////////////////////
+
+    private static <V> List<V> constructPath(VertexProperties<V> properties, V start, V end) {
+        LinkedList<V> path = new LinkedList<>();
+        if (Objects.equals(start, end) || properties.getParent(end) != null) {
+            V cur = end;
+            while (!Objects.equals(cur, start)) {
+                path.addFirst(cur);
+                cur = properties.getParent(cur);
+            }
+            path.addFirst(start);
+        }
+        return path;
+    }
+
+    // assumes there is a parent entry in VertexProperties for each node in the graph except for start
+    private static <V, L extends Comparable<? super L>> LabeledGraph<V, L> constructTree(LabeledGraph<V, L> graph,
+                                                                                         VertexProperties<V> properties,
+                                                                                         V start) {
+        LabeledGraph<V, L> tree = (LabeledGraph<V, L>) graph.emptyGraph();
+        graph.vertices()
+             .stream()
+             .filter(v -> !Objects.equals(v, start))
+             .forEach(v -> {
+                 V u = properties.getParent(v);
+                 tree.addEdge(u, v, graph.label(u, v).orElse(null));
+             });
+        return tree;
     }
 
     private static class VertexProperties<V> {
