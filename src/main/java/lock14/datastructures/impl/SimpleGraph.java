@@ -15,9 +15,10 @@ import java.util.Set;
 
 // TODO: switch to my implementation of Map and Set
 // once they are finished
+
 /**
  * Models a graph that does not allow more than one edge between any two vertices
- *
+ * <p>
  * Can either be directed or undirected, and allows self loops (e.g. a getVertex has an edge to
  * itself)
  */
@@ -408,7 +409,7 @@ public class SimpleGraph<V> implements Graph<V> {
 
         @Override
         public void add(V v) {
-            map.put(v, new TwoTuple<>(new HashSet<>(), new HashSet<>()));
+            map.put(v, Pair.of(new HashSet<>(), new HashSet<>()));
         }
 
         @Override
