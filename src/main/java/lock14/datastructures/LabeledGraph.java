@@ -2,7 +2,6 @@ package lock14.datastructures;
 
 import lock14.datastructures.impl.SimpleLabeledGraph;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -20,9 +19,9 @@ public interface LabeledGraph<V, L> extends Graph<V> {
 
     void addEdge(LabeledEdge<V, L> edge);
 
-    Optional<L> label(V u, V v);
+    L label(V u, V v);
 
-    Optional<L> label(Edge<V> edge);
+    L label(Edge<V> edge);
 
     Set<LabeledEdge<V, L>> labeledEdges();
 

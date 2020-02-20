@@ -93,19 +93,21 @@ public final class Graphs {
                                                        BiConsumer<Deque<V>, V> addConsumer,
                                                        Function<Deque<V>, V> removalFunction, V start) {
         VertexProperties<V> properties = new VertexProperties<>();
-        properties.markVisited(start);
-        Deque<V> deque = new ArrayDeque<>();
-        addConsumer.accept(deque, start);
-        while (!deque.isEmpty()) {
-            V u = removalFunction.apply(deque);
-            if (stopCondition.test(u)) {
-                break;
-            }
-            for (V v : graph.getAdjacent(u)) {
-                if (!properties.visited(v)) {
-                    properties.markVisited(v);
-                    properties.setParent(v, u);
-                    addConsumer.accept(deque, v);
+        if (!stopCondition.test(start)) {
+            Deque<V> deque = new ArrayDeque<>();
+            properties.markVisited(start);
+            addConsumer.accept(deque, start);
+            while (!deque.isEmpty()) {
+                V u = removalFunction.apply(deque);
+                if (stopCondition.test(u)) {
+                    return properties;
+                }
+                for (V v : graph.getAdjacent(u)) {
+                    if (!properties.visited(v)) {
+                        properties.markVisited(v);
+                        properties.setParent(v, u);
+                        addConsumer.accept(deque, v);
+                    }
                 }
             }
         }
@@ -224,7 +226,7 @@ public final class Graphs {
             if (!properties.visited(u)) {
                 properties.markVisited(u);
                 for (V v : graph.getAdjacent(u)) {
-                    L edgeDistance = graph.label(u, v).orElse(zero);
+                    L edgeDistance = graph.label(u, v);
                     L uDistance = properties.getDistance(u);
                     L newDistance = plus.apply(uDistance, edgeDistance);
                     L oldDistance = properties.getDistance(v);

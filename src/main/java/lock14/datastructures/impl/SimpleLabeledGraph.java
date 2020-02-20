@@ -285,14 +285,14 @@ public class SimpleLabeledGraph<V, L> implements LabeledGraph<V, L> {
     }
 
     @Override
-    public Optional<L> label(V u, V v) {
+    public L label(V u, V v) {
         validateVertex(u);
         validateVertex(v);
-        return Optional.ofNullable(graph.get(u).label(v));
+        return graph.get(u).label(v);
     }
 
     @Override
-    public Optional<L> label(Edge<V> edge) {
+    public L label(Edge<V> edge) {
         return label(edge.getU(), edge.getV());
     }
 
@@ -539,7 +539,7 @@ public class SimpleLabeledGraph<V, L> implements LabeledGraph<V, L> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            LabeledEdge<V, L> edge = new DirectedLabeledEdge<>(nextU, nextV, label(nextU, nextV).get());
+            LabeledEdge<V, L> edge = new DirectedLabeledEdge<>(nextU, nextV, label(nextU, nextV));
             findNextUAndV();
             return edge;
         }
@@ -651,7 +651,7 @@ public class SimpleLabeledGraph<V, L> implements LabeledGraph<V, L> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            LabeledEdge<V, L> edge = new UndirectedLabeledEdge<>(nextU, nextV, label(nextU, nextV).get());
+            LabeledEdge<V, L> edge = new UndirectedLabeledEdge<>(nextU, nextV, label(nextU, nextV));
             // move to next u and v nodes
             findNextUAndV();
             return edge;

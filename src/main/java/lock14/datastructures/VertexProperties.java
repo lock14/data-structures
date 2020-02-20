@@ -98,19 +98,19 @@ public class VertexProperties<V> {
     }
 
     public List<V> constructParentPath(V end) {
-        LinkedList<V> path = new LinkedList<>();
+        LinkedList<V> stack = new LinkedList<>();
         V cur = end;
         while (this.getParent(cur) != null) {
-            path.addFirst(cur);
+            stack.push(cur);
             cur = this.getParent(cur);
         }
-        path.addFirst(cur);
-        return path;
+        stack.push(cur);
+        return stack;
     }
 
     public <L> LabeledGraph<V, L> constructParentTree(LabeledGraph<V, L> graph) {
         LabeledGraph<V, L> tree = (LabeledGraph<V, L>) graph.emptyGraph();
-        this.forEachParent((v, u) -> tree.addEdge(u, v, graph.label(u, v).orElse(null)));
+        this.forEachParent((v, u) -> tree.addEdge(u, v, graph.label(u, v)));
         return tree;
     }
 
