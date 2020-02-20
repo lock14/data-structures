@@ -37,7 +37,7 @@ public final class Graphs {
             return Collections.emptyList();
         }
         VertexProperties<V> properties = new VertexProperties<>();
-        Queue<V> queue = new LinkedList<>();
+        Queue<V> queue = new ArrayDeque<>();
         properties.markVisited(start);
         queue.add(start);
         while (!queue.isEmpty()) {
@@ -67,16 +67,15 @@ public final class Graphs {
     public static <V> VertexProperties<V> depthFirstSearch2(Graph<V> graph, V start, V end) {
         VertexProperties<V> properties = new VertexProperties<>();
         Deque<V> stack = new ArrayDeque<>();
-        properties.markVisited(start);
         stack.push(start);
         while (!stack.isEmpty()) {
             V u = stack.pop();
             if (Objects.equals(u, end)) {
                 break;
             }
-            for (V v : graph.getAdjacent(u)) {
-                if (!properties.visited(v)) {
-                    properties.markVisited(v);
+            if (!properties.visited(u)) {
+                properties.markVisited(u);
+                for (V v : graph.getAdjacent(u)) {
                     properties.setParent(v, u);
                     stack.push(v);
                 }
