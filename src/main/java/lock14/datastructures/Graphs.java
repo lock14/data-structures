@@ -2,16 +2,20 @@ package lock14.datastructures;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashSet;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public final class Graphs {
@@ -25,6 +29,10 @@ public final class Graphs {
     ///////////////////////////////////////////////////////////////////////////
 
     public static <V> List<V> breadthFirstSearch(Graph<V> graph, V start, V end) {
+        return dequeSearch(graph, Predicate.isEqual(end), Deque::add, Deque::remove, start).constructParentPath(end);
+    }
+
+    public static <V> List<V> breadthFirstSearch2(Graph<V> graph, V start, V end) {
         if (Objects.equals(start, end)) {
             return Collections.emptyList();
         }
@@ -52,25 +60,57 @@ public final class Graphs {
     // Depth First Search
     ///////////////////////////////////////////////////////////////////////////
 
-    public static <V> boolean depthFirstSearch(Graph<V> graph, V start, V end) {
-        return depthFirstSearch(graph, start, end, new HashSet<>());
+    public static <V> List<V> depthFirstSearch(Graph<V> graph, V start, V end) {
+        return dequeSearch(graph, Predicate.isEqual(end), Deque::push, Deque::pop, start).constructParentPath(end);
     }
 
-    private static <V> boolean depthFirstSearch(Graph<V> graph, V u, V end, Set<V> visited) {
-        if (!visited.contains(u)) {
+    public static <V> VertexProperties<V> depthFirstSearch2(Graph<V> graph, V start, V end) {
+        VertexProperties<V> properties = new VertexProperties<>();
+        Deque<V> stack = new ArrayDeque<>();
+        properties.markVisited(start);
+        stack.push(start);
+        while (!stack.isEmpty()) {
+            V u = stack.pop();
             if (Objects.equals(u, end)) {
-                return true;
+                break;
             }
-            visited.add(u);
             for (V v : graph.getAdjacent(u)) {
-                if (depthFirstSearch(graph, v, end, visited)) {
-                    return true;
+                if (!properties.visited(v)) {
+                    properties.markVisited(v);
+                    properties.setParent(v, u);
+                    stack.push(v);
                 }
             }
         }
-        return false;
+        return properties;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Deque Search
+    ///////////////////////////////////////////////////////////////////////////
+
+    private static <V> VertexProperties<V> dequeSearch(Graph<V> graph, Predicate<V> stopCondition,
+                                                       BiConsumer<Deque<V>, V> addConsumer,
+                                                       Function<Deque<V>, V> removalFunction, V start) {
+        VertexProperties<V> properties = new VertexProperties<>();
+        properties.markVisited(start);
+        Deque<V> deque = new ArrayDeque<>();
+        addConsumer.accept(deque, start);
+        while (!deque.isEmpty()) {
+            V u = removalFunction.apply(deque);
+            if (stopCondition.test(u)) {
+                break;
+            }
+            for (V v : graph.getAdjacent(u)) {
+                if (!properties.visited(v)) {
+                    properties.markVisited(v);
+                    properties.setParent(v, u);
+                    addConsumer.accept(deque, v);
+                }
+            }
+        }
+        return properties;
+    }
     ///////////////////////////////////////////////////////////////////////////
     // Dijkstra Shortest Path Convenience Methods
     ///////////////////////////////////////////////////////////////////////////
@@ -110,7 +150,7 @@ public final class Graphs {
     public static <V, L extends Comparable<? super L>> List<V> dijkstraShortestPath(LabeledGraph<V, L> graph, V start,
                                                                                     V end, L zero,
                                                                                     BinaryOperator<L> plus) {
-        return dijkstra(graph, plus, v -> Objects.equals(v, end), start, zero).constructParentPath(end);
+        return dijkstra(graph, plus, Predicate.isEqual(end), start, zero).constructParentPath(end);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -274,5 +314,4 @@ public final class Graphs {
         }
         return true;
     }
-
 }
