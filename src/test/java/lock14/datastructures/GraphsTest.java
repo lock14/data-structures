@@ -1,5 +1,8 @@
 package lock14.datastructures;
 
+import static org.junit.Assert.assertEquals;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
 
 public class GraphsTest {
@@ -33,8 +36,7 @@ public class GraphsTest {
                                                           .withEdge("c", "d", 2)
                                                           .withEdge("d", "e", 4)
                                                           .build();
-        System.out.println(graph);
-        System.out.println(Graphs.dijkstraShortestPathInt(graph, "a", "e"));
+        assertEquals(Arrays.asList("a", "c", "d", "e"), Graphs.dijkstraShortestPathInt(graph, "a", "e"));
     }
 
     @Test

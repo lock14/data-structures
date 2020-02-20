@@ -50,8 +50,8 @@ public interface LabeledEdge<V, L> extends Edge<V> {
             }
             SimpleLabeledEdge<?, ?> that = (SimpleLabeledEdge<?, ?>) o;
             return Objects.equals(u, that.u) &&
-                   Objects.equals(v, that.v) &&
-                   Objects.equals(label, that.label);
+                    Objects.equals(v, that.v) &&
+                    Objects.equals(label, that.label);
         }
 
         @Override

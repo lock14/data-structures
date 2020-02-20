@@ -3,7 +3,6 @@ package lock14.datastructures.impl;
 import lock14.datastructures.Map;
 import lock14.datastructures.Pair;
 import lock14.datastructures.Set;
-
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -19,7 +18,7 @@ public class HashTable<K, V> implements Map<K, V> {
 
     private Set<Pair<K, V>> entrySet = new AbstractSet<Pair<K, V>>() {
         @Override
-        public boolean contains(Object o ) {
+        public boolean contains(Object o) {
             if (!(o instanceof Pair)) {
                 return false;
             }
@@ -53,7 +52,7 @@ public class HashTable<K, V> implements Map<K, V> {
 
     private Set<K> keySet = new AbstractSet<K>() {
         @Override
-        public boolean contains(Object o ) {
+        public boolean contains(Object o) {
             return containsKey(o);
         }
 
@@ -227,7 +226,7 @@ public class HashTable<K, V> implements Map<K, V> {
         return ((double) size) / ((double) hashTable.length);
     }
 
-    private static final class HashNode<K, V> implements Pair<K, V> {
+    private static final class HashNode<K, V> extends AbstractPair<K, V> {
         K key;
         V value;
         HashNode<K, V> next;
@@ -252,25 +251,6 @@ public class HashTable<K, V> implements Map<K, V> {
             return value;
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (o instanceof TwoTuple) {
-                Pair<?, ?> other = (Pair<?, ?>) o;
-                return Objects.equals(this.first(), other.first())
-                       && Objects.equals(this.second(), other.second());
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(key, value);
-        }
-
-        @Override
-        public String toString() {
-            return "(" + key + ", " + value + ")";
-        }
     }
 
     private class KeyIterator extends HashNodeIterator implements Iterator<K> {
@@ -332,7 +312,8 @@ public class HashTable<K, V> implements Map<K, V> {
 
         private HashNode<K, V> getNextNode(HashNode<K, V> nextNode) {
             if (nextNode == null) {
-                while (index < hashTable.length && (nextNode = hashTable[index++]) == null) {}
+                while (index < hashTable.length && (nextNode = hashTable[index++]) == null) {
+                }
             }
             return nextNode;
         }

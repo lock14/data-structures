@@ -14,6 +14,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.BinaryOperator;
+import java.util.function.Predicate;
 
 // TODO: switch all auxiliary data-structures over to my implementations
 // once they are finished.
@@ -102,42 +103,55 @@ public final class Graphs {
     public static <V, L extends Comparable<? super L>> List<V> dijkstraShortestPath(LabeledGraph<V, L> graph, V start,
                                                                                     V end, L zero,
                                                                                     BinaryOperator<L> plus) {
-        Set<V> visited = new HashSet<>();
-        Map<V, V> previous = new HashMap<>();
-        Map<V, L> cost = new HashMap<>();
-        Queue<VertexLabel<V, L>> fringe = new PriorityQueue<>(Comparator.comparing(VertexLabel::getLabel));
+        VertexProperties<V> properties = dijkstra(graph, start, end, zero, plus);
 
-        cost.put(start, zero);
-        fringe.add(vertexLabel(start, zero));
-        while (!fringe.isEmpty()) {
-            VertexLabel<V, L> vertexLabel = fringe.remove();
-            V u = vertexLabel.vertex;
-            if (Objects.equals(u, end)) {
-                break;
-            }
-            if (!visited.contains(u)) {
-                visited.add(u);
-                for (V v : graph.getAdjacent(u)) {
-                    L edgeWeight = graph.label(u, v).orElse(zero);
-                    L newCost = plus.apply(cost.get(u), edgeWeight);
-                    L oldCost = cost.get(v);
-                    if (oldCost == null || newCost.compareTo(oldCost) < 0) {
-                        // update target cost
-                        cost.put(v, newCost);
-                        previous.put(v, u);
-                        fringe.add(vertexLabel(v, newCost));
-                    }
-                }
-            }
-        }
+        @SuppressWarnings("unchecked")
+        Class<? extends V> vClass = (Class<? extends V>) start.getClass();
+
         LinkedList<V> path = new LinkedList<>();
         V cur = end;
         while (!Objects.equals(cur, start)) {
             path.addFirst(cur);
-            cur = previous.get(cur);
+            cur = properties.get(cur, VertexProperties.PARENT, vClass);
         }
         path.addFirst(start);
         return path;
+    }
+
+    private static <V, L extends Comparable<? super L>> VertexProperties<V> dijkstra(LabeledGraph<V, L> graph, V start,
+                                                                                     V end, L zero,
+                                                                                     BinaryOperator<L> plus) {
+        @SuppressWarnings("unchecked")
+        Class<? extends L> lClass = (Class<? extends L>) zero.getClass();
+
+        VertexProperties<V> properties = new VertexProperties<>();
+        Queue<Pair<V, L>> fringe = new PriorityQueue<>(Comparator.comparing(Pair::second));
+
+        properties.setDistance(start, zero);
+        fringe.add(Pair.of(start, zero));
+        while (!fringe.isEmpty()) {
+            Pair<V, L> pair = fringe.remove();
+            V u = pair.first();
+            if (end != null && Objects.equals(u, end)) {
+                break;
+            }
+            if (!properties.visited(u)) {
+                properties.markVisited(u);
+                for (V v : graph.getAdjacent(u)) {
+                    L edgeDistance = graph.label(u, v).orElse(zero);
+                    L uDistance = properties.getDistance(u, lClass);
+                    L newDistance = plus.apply(uDistance, edgeDistance);
+                    L oldDistance = properties.getDistance(v, lClass);
+                    if (oldDistance == null || newDistance.compareTo(oldDistance) < 0) {
+                        // update target distance
+                        properties.setDistance(v, newDistance);
+                        properties.put(v, VertexProperties.PARENT, u);
+                        fringe.add(Pair.of(v, newDistance));
+                    }
+                }
+            }
+        }
+        return properties;
     }
 
     public static <V> LabeledGraph<V, Byte> dijkstraAllShortestPathsByte(LabeledGraph<V, Byte> graph, V start) {
@@ -157,8 +171,8 @@ public final class Graphs {
     }
 
     public static <V> LabeledGraph<V, BigInteger> dijkstraAllShortestPathsBigInteger(
-                                                                                    LabeledGraph<V, BigInteger> graph,
-                                                                                    V start) {
+                                                                                     LabeledGraph<V, BigInteger> graph,
+                                                                                     V start) {
         return dijkstraAllShortestPaths(graph, start, BigInteger.ZERO, BigInteger::add);
     }
 
@@ -171,44 +185,26 @@ public final class Graphs {
     }
 
     public static <V> LabeledGraph<V, BigDecimal> dijkstraAllShortestPathsBigDecimal(
-                                                                                    LabeledGraph<V, BigDecimal> graph,
-                                                                                    V start) {
+                                                                                     LabeledGraph<V, BigDecimal> graph,
+                                                                                     V start) {
         return dijkstraAllShortestPaths(graph, start, BigDecimal.ZERO, BigDecimal::add);
     }
 
     public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> dijkstraAllShortestPaths(
-                                                                                                  LabeledGraph<V, L> graph,
-                                                                                                  V start, L zero,
-                                                                                                  BinaryOperator<L> plus) {
-        Set<V> visited = new HashSet<>();
-        Map<V, V> previous = new HashMap<>();
-        Map<V, L> cost = new HashMap<>();
-        Queue<VertexLabel<V, L>> fringe = new PriorityQueue<>(Comparator.comparing(VertexLabel::getLabel));
+                                                                                                   LabeledGraph<V, L> graph,
+                                                                                                   V start, L zero,
+                                                                                                   BinaryOperator<L> plus) {
+        VertexProperties<V> properties = dijkstra(graph, start, null, zero, plus);
 
-        cost.put(start, zero);
-        fringe.add(vertexLabel(start, zero));
-        while (!fringe.isEmpty()) {
-            VertexLabel<V, L> vertexLabel = fringe.remove();
-            V u = vertexLabel.vertex;
-            if (!visited.contains(u)) {
-                visited.add(u);
-                for (V v : graph.getAdjacent(u)) {
-                    L edgeWeight = graph.label(u, v).orElse(zero);
-                    L newCost = plus.apply(cost.get(u), edgeWeight);
-                    L oldCost = cost.get(v);
-                    if (oldCost == null || newCost.compareTo(oldCost) < 0) {
-                        // update target cost
-                        cost.put(v, newCost);
-                        previous.put(v, u);
-                        fringe.add(vertexLabel(v, newCost));
-                    }
-                }
-            }
-        }
+        @SuppressWarnings("unchecked")
+        Class<? extends V> vClass = (Class<? extends V>) start.getClass();
 
         // we return a tree which contains all shortest paths from start to any other node
         LabeledGraph<V, L> tree = (LabeledGraph<V, L>) graph.emptyGraph();
-        previous.forEach((v, u) -> tree.addEdge(u, v, graph.label(u, v).orElse(zero)));
+        graph.vertices().forEach(v -> {
+            V u = properties.get(v, VertexProperties.PARENT, vClass);
+            tree.addEdge(u, v, graph.label(u, v).orElse(zero));
+        });
         return tree;
     }
 
@@ -216,7 +212,8 @@ public final class Graphs {
         return minimumSpanningTree(graph, graph.vertices().iterator().next());
     }
 
-    public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> minimumSpanningTree(LabeledGraph<V, L> graph, V start) {
+    public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> minimumSpanningTree(LabeledGraph<V, L> graph,
+                                                                                              V start) {
         if (graph.isDirected()) {
             throw new IllegalArgumentException("cannot construct minimum spanning tree for a directed graph!");
         }
@@ -277,25 +274,49 @@ public final class Graphs {
         return true;
     }
 
-    private static <V, L extends Comparable<? super L>> VertexLabel<V, L> vertexLabel(V v, L label) {
-        return new VertexLabel<>(v, label);
-    }
+    private static class VertexProperties<V> {
+        public static final String COLOR = "color";
+        public static final String DISTANCE = "cost";
+        public static final String PARENT = "parent";
+        public static final String VISITED = "visited";
 
-    private static class VertexLabel<V, L> {
-        private V vertex;
-        private L label;
+        private Map<V, Map<String, Object>> properties;
 
-        VertexLabel(V vertex, L label) {
-            this.vertex = vertex;
-            this.label = label;
+        public VertexProperties() {
+            properties = new HashMap<>();
         }
 
-        public V getVertex() {
-            return vertex;
+        public <T> T put(V vertex, String propertyName, T property) {
+            @SuppressWarnings("unchecked")
+            Class<? extends T> tClass = (Class<? extends T>) property.getClass();
+            return tClass.cast(getProperties(vertex).put(propertyName, property));
         }
 
-        public L getLabel() {
-            return label;
+        public <T> T get(V vertex, String propertyName, Class<T> tClass) {
+            return tClass.cast(getProperties(vertex).get(propertyName));
+        }
+
+        boolean visited(V vertex) {
+            return Objects.equals(get(vertex, VISITED, Boolean.class), Boolean.TRUE);
+        }
+
+        public boolean markVisited(V u) {
+            return Objects.equals(put(u, VertexProperties.VISITED, Boolean.TRUE), Boolean.TRUE);
+        }
+
+        public <L> L getDistance(V v, Class<? extends L> lclass) {
+            return get(v, DISTANCE, lclass);
+        }
+
+        public <L> L setDistance(V v, L distance) {
+            return put(v, DISTANCE, distance);
+        }
+
+        private Map<String, Object> getProperties(V vertex) {
+            if (!properties.containsKey(vertex)) {
+                properties.put(vertex, new HashMap<>());
+            }
+            return properties.get(vertex);
         }
     }
 }

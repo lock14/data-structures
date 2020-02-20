@@ -1,7 +1,6 @@
 package lock14.datastructures.impl;
 
 import lock14.datastructures.Collection;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.ConcurrentModificationException;

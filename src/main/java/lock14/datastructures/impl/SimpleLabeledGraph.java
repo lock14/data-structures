@@ -4,7 +4,6 @@ import lock14.datastructures.Edge;
 import lock14.datastructures.Graph;
 import lock14.datastructures.LabeledEdge;
 import lock14.datastructures.LabeledGraph;
-
 import java.util.AbstractSet;
 import java.util.Collections;
 import java.util.HashMap;
@@ -342,8 +341,8 @@ public class SimpleLabeledGraph<V, L> implements LabeledGraph<V, L> {
         }
         SimpleLabeledGraph<?, ?> other = (SimpleLabeledGraph<?, ?>) o;
         return this.directed == other.directed &&
-               this.edgeCount == other.edgeCount &&
-               Objects.equals(this.graph, other.graph);
+                this.edgeCount == other.edgeCount &&
+                Objects.equals(this.graph, other.graph);
     }
 
     @Override
@@ -510,7 +509,7 @@ public class SimpleLabeledGraph<V, L> implements LabeledGraph<V, L> {
             }
             DirectedNodeData<?, ?> that = (DirectedNodeData<?, ?>) o;
             return Objects.equals(successorValues, that.successorValues) &&
-                   Objects.equals(predecessors, that.predecessors);
+                    Objects.equals(predecessors, that.predecessors);
         }
 
         @Override
@@ -615,7 +614,7 @@ public class SimpleLabeledGraph<V, L> implements LabeledGraph<V, L> {
             }
             DirectedLabeledEdge<?, ?> other = (DirectedLabeledEdge<?, ?>) o;
             return Objects.equals(this.u, other.u) && Objects.equals(this.v, other.v)
-                   && Objects.equals(this.label, other.label);
+                    && Objects.equals(this.label, other.label);
         }
 
         @Override
@@ -735,7 +734,7 @@ public class SimpleLabeledGraph<V, L> implements LabeledGraph<V, L> {
             UndirectedLabeledEdge<?, ?> other = (UndirectedLabeledEdge<?, ?>) o;
             return ((Objects.equals(this.u, other.u) && Objects.equals(this.v, other.v))
                     || (Objects.equals(this.u, other.v) && Objects.equals(this.v, other.u)))
-                   && Objects.equals(this.label, other.label);
+                    && Objects.equals(this.label, other.label);
         }
 
         @Override
