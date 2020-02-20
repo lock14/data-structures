@@ -1,8 +1,10 @@
 package lock14.datastructures;
 
 import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.List;
+
 import org.junit.Test;
 
 public class GraphsTest {
@@ -37,6 +39,31 @@ public class GraphsTest {
                                                           .withEdge("d", "e", 4)
                                                           .build();
         assertEquals(Arrays.asList("a", "c", "d", "e"), Graphs.dijkstraShortestPathInt(graph, "a", "e"));
+    }
+
+    @Test
+    public void djikstraShortestPathTest2() {
+        LabeledGraph<String, Integer> graph = LabeledGraph.directed()
+                                                          .withEdge("a", "b", 8)
+                                                          .withEdge("a", "f", 10)
+                                                          .withEdge("b", "c", 4)
+                                                          .withEdge("b", "e", 10)
+                                                          .withEdge("c", "d", 3)
+                                                          .withEdge("d", "e", 25)
+                                                          .withEdge("d", "f", 18)
+                                                          .withEdge("e", "d", 9)
+                                                          .withEdge("e", "g", 7)
+                                                          .withEdge("f", "a", 5)
+                                                          .withEdge("f", "b", 7)
+                                                          .withEdge("f", "c", 3)
+                                                          .withEdge("f", "e", 2)
+                                                          .withEdge("g", "d", 2)
+                                                          .withEdge("g", "h", 3)
+                                                          .withEdge("h", "a", 4)
+                                                          .withEdge("h", "b", 9)
+                                                          .build();
+        System.out.println(Graphs.dijkstraShortestPathInt(graph, "g", "c"));
+        System.out.println(Graphs.dijkstraAllShortestPathsInt(graph, "g"));
     }
 
     @Test

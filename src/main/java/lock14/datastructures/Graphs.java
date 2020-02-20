@@ -21,7 +21,8 @@ import java.util.function.Predicate;
 public final class Graphs {
 
     // make utility class non-instantiable
-    private Graphs() {}
+    private Graphs() {
+    }
 
     public static <V> boolean breadthFirstSearch(Graph<V> graph, V start, V end) {
         if (Objects.equals(start, end)) {
@@ -103,24 +104,23 @@ public final class Graphs {
     public static <V, L extends Comparable<? super L>> List<V> dijkstraShortestPath(LabeledGraph<V, L> graph, V start,
                                                                                     V end, L zero,
                                                                                     BinaryOperator<L> plus) {
-        VertexProperties<V> properties = dijkstra(graph, start, end, zero, plus);
-
-        @SuppressWarnings("unchecked")
-        Class<? extends V> vClass = (Class<? extends V>) start.getClass();
+        VertexProperties<V> properties = dijkstra(graph, plus, v -> Objects.equals(v, end), start, zero);
 
         LinkedList<V> path = new LinkedList<>();
         V cur = end;
         while (!Objects.equals(cur, start)) {
             path.addFirst(cur);
-            cur = properties.get(cur, VertexProperties.PARENT, vClass);
+            cur = properties.getParent(cur);
         }
         path.addFirst(start);
         return path;
     }
 
-    private static <V, L extends Comparable<? super L>> VertexProperties<V> dijkstra(LabeledGraph<V, L> graph, V start,
-                                                                                     V end, L zero,
-                                                                                     BinaryOperator<L> plus) {
+    private static <V, L extends Comparable<? super L>> VertexProperties<V> dijkstra(LabeledGraph<V, L> graph,
+                                                                                     BinaryOperator<L> plus,
+                                                                                     Predicate<V> stopCondition,
+                                                                                     V start,
+                                                                                     L zero) {
         @SuppressWarnings("unchecked")
         Class<? extends L> lClass = (Class<? extends L>) zero.getClass();
 
@@ -132,8 +132,8 @@ public final class Graphs {
         while (!fringe.isEmpty()) {
             Pair<V, L> pair = fringe.remove();
             V u = pair.first();
-            if (end != null && Objects.equals(u, end)) {
-                break;
+            if (stopCondition.test(u)) {
+                return properties;
             }
             if (!properties.visited(u)) {
                 properties.markVisited(u);
@@ -145,7 +145,7 @@ public final class Graphs {
                     if (oldDistance == null || newDistance.compareTo(oldDistance) < 0) {
                         // update target distance
                         properties.setDistance(v, newDistance);
-                        properties.put(v, VertexProperties.PARENT, u);
+                        properties.setParent(v, u);
                         fringe.add(Pair.of(v, newDistance));
                     }
                 }
@@ -171,8 +171,8 @@ public final class Graphs {
     }
 
     public static <V> LabeledGraph<V, BigInteger> dijkstraAllShortestPathsBigInteger(
-                                                                                     LabeledGraph<V, BigInteger> graph,
-                                                                                     V start) {
+            LabeledGraph<V, BigInteger> graph,
+            V start) {
         return dijkstraAllShortestPaths(graph, start, BigInteger.ZERO, BigInteger::add);
     }
 
@@ -185,30 +185,30 @@ public final class Graphs {
     }
 
     public static <V> LabeledGraph<V, BigDecimal> dijkstraAllShortestPathsBigDecimal(
-                                                                                     LabeledGraph<V, BigDecimal> graph,
-                                                                                     V start) {
+            LabeledGraph<V, BigDecimal> graph,
+            V start) {
         return dijkstraAllShortestPaths(graph, start, BigDecimal.ZERO, BigDecimal::add);
     }
 
     public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> dijkstraAllShortestPaths(
-                                                                                                   LabeledGraph<V, L> graph,
-                                                                                                   V start, L zero,
-                                                                                                   BinaryOperator<L> plus) {
-        VertexProperties<V> properties = dijkstra(graph, start, null, zero, plus);
-
-        @SuppressWarnings("unchecked")
-        Class<? extends V> vClass = (Class<? extends V>) start.getClass();
-
+            LabeledGraph<V, L> graph,
+            V start, L zero,
+            BinaryOperator<L> plus) {
+        VertexProperties<V> properties = dijkstra(graph, plus, v -> false, start, zero);
         // we return a tree which contains all shortest paths from start to any other node
         LabeledGraph<V, L> tree = (LabeledGraph<V, L>) graph.emptyGraph();
-        graph.vertices().forEach(v -> {
-            V u = properties.get(v, VertexProperties.PARENT, vClass);
-            tree.addEdge(u, v, graph.label(u, v).orElse(zero));
-        });
+        graph.vertices()
+             .stream()
+             .filter(v -> !Objects.equals(v, start))
+             .forEach(v -> {
+                 V u = properties.getParent(v);
+                 tree.addEdge(u, v, graph.label(u, v).orElse(zero));
+             });
         return tree;
     }
 
-    public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> minimumSpanningTree(LabeledGraph<V, L> graph) {
+    public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> minimumSpanningTree(
+            LabeledGraph<V, L> graph) {
         return minimumSpanningTree(graph, graph.vertices().iterator().next());
     }
 
@@ -296,20 +296,38 @@ public final class Graphs {
             return tClass.cast(getProperties(vertex).get(propertyName));
         }
 
-        boolean visited(V vertex) {
+        public boolean visited(V vertex) {
             return Objects.equals(get(vertex, VISITED, Boolean.class), Boolean.TRUE);
         }
 
-        public boolean markVisited(V u) {
-            return Objects.equals(put(u, VertexProperties.VISITED, Boolean.TRUE), Boolean.TRUE);
+        public boolean markVisited(V vertex) {
+            return Objects.equals(put(vertex, VertexProperties.VISITED, Boolean.TRUE), Boolean.TRUE);
         }
 
-        public <L> L getDistance(V v, Class<? extends L> lclass) {
-            return get(v, DISTANCE, lclass);
+        public V getParent(V vertex) {
+            @SuppressWarnings("unchecked")
+            Class<? extends V> vClass = (Class<? extends V>) vertex.getClass();
+            return get(vertex, PARENT, vClass);
         }
 
-        public <L> L setDistance(V v, L distance) {
-            return put(v, DISTANCE, distance);
+        public V setParent(V vertex, V parent) {
+            return put(vertex, PARENT, parent);
+        }
+
+        public <L> L getDistance(V vertex, Class<? extends L> lClass) {
+            return get(vertex, DISTANCE, lClass);
+        }
+
+        public <L> L setDistance(V vertex, L distance) {
+            return put(vertex, DISTANCE, distance);
+        }
+
+        public <C> C getColor(V vertex, Class<? extends C> cClass) {
+            return get(vertex, COLOR, cClass);
+        }
+
+        public <C> C setColor(V vertex, C color) {
+            return put(vertex, COLOR, color);
         }
 
         private Map<String, Object> getProperties(V vertex) {
