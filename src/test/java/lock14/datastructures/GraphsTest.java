@@ -3,9 +3,22 @@ package lock14.datastructures;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+
 import org.junit.Test;
 
 public class GraphsTest {
+
+    @Test
+    public void bfsdfs() {
+        Graph<Integer> graph = Graph.undirected()
+                                    .withEdge(1, 2)
+                                    .withEdge(1, 3)
+                                    .withEdge(2, 4)
+                                    .withEdge(3, 4)
+                                    .build();
+        System.out.println(Graphs.breadthFirstSearch(graph, 1, 4).constructParentPath(4));
+        System.out.println(Graphs.depthFirstSearch(graph, 1, 4).constructParentPath(4));
+    }
 
     @Test
     public void minimumSpanningTreeTest() {

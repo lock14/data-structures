@@ -13,9 +13,7 @@ import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public final class Graphs {
@@ -28,54 +26,43 @@ public final class Graphs {
     // Breadth First Search
     ///////////////////////////////////////////////////////////////////////////
 
-    public static <V> List<V> breadthFirstSearch(Graph<V> graph, V start, V end) {
-        return dequeSearch(graph, Predicate.isEqual(end), Deque::add, Deque::remove, start).constructParentPath(end);
-    }
-
-    public static <V> List<V> breadthFirstSearch2(Graph<V> graph, V start, V end) {
-        if (Objects.equals(start, end)) {
-            return Collections.emptyList();
-        }
+    public static <V> VertexProperties<V> breadthFirstSearch(Graph<V> graph, V start, V end) {
         VertexProperties<V> properties = new VertexProperties<>();
         Queue<V> queue = new ArrayDeque<>();
         properties.markVisited(start);
         queue.add(start);
         while (!queue.isEmpty()) {
             V u = queue.remove();
-            if (Objects.equals(u, end)) {
-                break;
-            }
             for (V v : graph.getAdjacent(u)) {
                 if (!properties.visited(v)) {
-                    properties.markVisited(v);
                     properties.setParent(v, u);
+                    properties.markVisited(v);
+                    if (Objects.equals(u, end)) {
+                        return properties;
+                    }
                     queue.add(v);
                 }
             }
         }
-        return properties.constructParentPath(end);
+        return properties;
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // Depth First Search
     ///////////////////////////////////////////////////////////////////////////
 
-    public static <V> List<V> depthFirstSearch(Graph<V> graph, V start, V end) {
-        return dequeSearch(graph, Predicate.isEqual(end), Deque::push, Deque::pop, start).constructParentPath(end);
-    }
-
-    public static <V> VertexProperties<V> depthFirstSearch2(Graph<V> graph, V start, V end) {
+    public static <V> VertexProperties<V> depthFirstSearch(Graph<V> graph, V start, V end) {
         VertexProperties<V> properties = new VertexProperties<>();
         Deque<V> stack = new ArrayDeque<>();
         stack.push(start);
         while (!stack.isEmpty()) {
             V u = stack.pop();
+            properties.markVisited(u);
             if (Objects.equals(u, end)) {
-                break;
+                return properties;
             }
-            if (!properties.visited(u)) {
-                properties.markVisited(u);
-                for (V v : graph.getAdjacent(u)) {
+            for (V v : graph.getAdjacent(u)) {
+                if (!properties.visited(v)) {
                     properties.setParent(v, u);
                     stack.push(v);
                 }
@@ -84,34 +71,6 @@ public final class Graphs {
         return properties;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Deque Search
-    ///////////////////////////////////////////////////////////////////////////
-
-    private static <V> VertexProperties<V> dequeSearch(Graph<V> graph, Predicate<V> stopCondition,
-                                                       BiConsumer<Deque<V>, V> addConsumer,
-                                                       Function<Deque<V>, V> removalFunction, V start) {
-        VertexProperties<V> properties = new VertexProperties<>();
-        if (!stopCondition.test(start)) {
-            Deque<V> deque = new ArrayDeque<>();
-            properties.markVisited(start);
-            addConsumer.accept(deque, start);
-            while (!deque.isEmpty()) {
-                V u = removalFunction.apply(deque);
-                if (stopCondition.test(u)) {
-                    return properties;
-                }
-                for (V v : graph.getAdjacent(u)) {
-                    if (!properties.visited(v)) {
-                        properties.markVisited(v);
-                        properties.setParent(v, u);
-                        addConsumer.accept(deque, v);
-                    }
-                }
-            }
-        }
-        return properties;
-    }
     ///////////////////////////////////////////////////////////////////////////
     // Dijkstra Shortest Path Convenience Methods
     ///////////////////////////////////////////////////////////////////////////
