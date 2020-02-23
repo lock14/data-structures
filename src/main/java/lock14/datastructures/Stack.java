@@ -2,9 +2,9 @@ package lock14.datastructures;
 
 public interface Stack<E> extends Collection<E> {
 
-    public E peek();
+    E peek();
 
-    public E pop();
+    E pop();
 
-    public void push(E element);
+    void push(E element);
 }

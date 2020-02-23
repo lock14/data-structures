@@ -2,9 +2,9 @@ package lock14.datastructures;
 
 public interface Queue<E> extends Collection<E> {
 
-    public void enqueue(E element);
+    void enqueue(E element);
 
-    public E dequeue();
+    E dequeue();
 
-    public E peek();
+    E peek();
 }

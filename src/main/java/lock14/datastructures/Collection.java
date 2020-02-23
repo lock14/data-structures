@@ -4,25 +4,25 @@ import java.util.Iterator;
 
 public interface Collection<E> extends Iterable<E> {
 
-    public void add(E e);
+    void add(E e);
 
-    public void addAll(Collection<? extends E> c);
+    void addAll(Collection<? extends E> c);
 
-    public void clear();
+    void clear();
 
-    public boolean contains(Object o);
+    boolean contains(Object o);
 
-    public boolean containsAll(Collection<?> c);
+    boolean containsAll(Collection<?> c);
 
-    public boolean isEmpty();
+    boolean isEmpty();
 
-    public Iterator<E> iterator();
+    Iterator<E> iterator();
 
-    public void remove(Object o);
+    void remove(Object o);
 
-    public void removeAll(Collection<?> c);
+    void removeAll(Collection<?> c);
 
-    public void retainAll(Collection<?> c);
+    void retainAll(Collection<?> c);
 
-    public int size();
+    int size();
 }
