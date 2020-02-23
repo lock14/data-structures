@@ -1,4 +1,4 @@
-package lock14.datastructures;
+package lock14.datastructures.graph;
 
 import java.util.Objects;
 

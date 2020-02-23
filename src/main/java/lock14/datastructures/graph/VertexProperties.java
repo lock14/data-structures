@@ -1,4 +1,6 @@
-package lock14.datastructures;
+package lock14.datastructures.graph;
+
+import lock14.datastructures.Pair;
 
 import java.util.HashMap;
 import java.util.LinkedList;

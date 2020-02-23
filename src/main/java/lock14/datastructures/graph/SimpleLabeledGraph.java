@@ -1,9 +1,5 @@
-package lock14.datastructures.impl;
+package lock14.datastructures.graph;
 
-import lock14.datastructures.Edge;
-import lock14.datastructures.Graph;
-import lock14.datastructures.LabeledEdge;
-import lock14.datastructures.LabeledGraph;
 import java.util.AbstractSet;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,7 +8,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 /**

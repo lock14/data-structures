@@ -1,10 +1,10 @@
-package lock14.datastructures;
+package lock14.datastructures.graph;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class GraphsTest {
 

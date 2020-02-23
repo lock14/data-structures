@@ -1,7 +1,5 @@
-package lock14.datastructures.impl;
+package lock14.datastructures.graph;
 
-import lock14.datastructures.Edge;
-import lock14.datastructures.Graph;
 import lock14.datastructures.Pair;
 import java.util.AbstractSet;
 import java.util.Collections;
@@ -12,9 +10,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
-
-// TODO: switch to my implementation of Map and Set
-// once they are finished
 
 /**
  * Models a graph that does not allow more than one edge between any two vertices

@@ -1,6 +1,5 @@
-package lock14.datastructures;
+package lock14.datastructures.graph;
 
-import lock14.datastructures.impl.SimpleGraph;
 import java.util.HashSet;
 import java.util.Set;
 
