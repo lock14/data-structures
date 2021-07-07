@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import lock14.datastructures.impl.AbstractList;
 import org.junit.Test;
 import lock14.datastructures.impl.ArrayList;
 import lock14.datastructures.impl.LinkedList;
@@ -17,7 +19,7 @@ public class LinkedListTest {
     @Test
     public void emptyListTest() {
         LinkedList<Integer> list = new LinkedList<>();
-        assertTrue(list.size() == 0);
+        assertEquals(0, list.size());
         assertFalse(list.iterator().hasNext());
         assertFalse(list.listIterator().hasPrevious());
         assertEquals(list.toString(), "[]");
@@ -87,7 +89,7 @@ public class LinkedListTest {
 
     private static <E> LinkedList<E> collect(Stream<E> stream) {
         return stream.collect(Collector.of((Supplier<LinkedList<E>>) LinkedList::new,
-                                           (list, element) -> list.add(element),
+                                           AbstractList::add,
                                            (list1, list2) -> {
                                                list1.addAll(list2);
                                                return list1;
