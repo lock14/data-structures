@@ -78,41 +78,41 @@ public final class Graphs {
     ///////////////////////////////////////////////////////////////////////////
 
     public static <V> List<V> dijkstraShortestPathByte(LabeledGraph<V, Byte> graph, V start, V end) {
-        return dijkstraShortestPath(graph, start, end, (byte) 0, (a, b) -> (byte) (a + b));
+        return dijkstraShortestPath(graph, start, end, (a, b) -> (byte) (a + b), (byte) 0);
     }
 
     public static <V> List<V> dijkstraShortestPathShort(LabeledGraph<V, Short> graph, V start, V end) {
-        return dijkstraShortestPath(graph, start, end, (short) 0, (a, b) -> (short) (a + b));
+        return dijkstraShortestPath(graph, start, end, (a, b) -> (short) (a + b), (short) 0);
     }
 
     public static <V> List<V> dijkstraShortestPathInt(LabeledGraph<V, Integer> graph, V start, V end) {
-        return dijkstraShortestPath(graph, start, end, 0, Integer::sum);
+        return dijkstraShortestPath(graph, start, end, Integer::sum, 0);
     }
 
     public static <V> List<V> dijkstraShortestPathLong(LabeledGraph<V, Long> graph, V start, V end) {
-        return dijkstraShortestPath(graph, start, end, 0L, Long::sum);
+        return dijkstraShortestPath(graph, start, end, Long::sum, 0L);
     }
 
     public static <V> List<V> dijkstraShortestPathBigInteger(LabeledGraph<V, BigInteger> graph, V start, V end) {
-        return dijkstraShortestPath(graph, start, end, BigInteger.ZERO, BigInteger::add);
+        return dijkstraShortestPath(graph, start, end, BigInteger::add, BigInteger.ZERO);
     }
 
     public static <V> List<V> dijkstraShortestPathFloat(LabeledGraph<V, Float> graph, V start, V end) {
-        return dijkstraShortestPath(graph, start, end, (float) 0.0, Float::sum);
+        return dijkstraShortestPath(graph, start, end, Float::sum, (float) 0.0);
     }
 
     public static <V> List<V> dijkstraShortestPathDouble(LabeledGraph<V, Double> graph, V start, V end) {
-        return dijkstraShortestPath(graph, start, end, 0.0, Double::sum);
+        return dijkstraShortestPath(graph, start, end, Double::sum, 0.0);
     }
 
     public static <V> List<V> dijkstraShortestPathBigDecimal(LabeledGraph<V, BigDecimal> graph, V start, V end) {
-        return dijkstraShortestPath(graph, start, end, BigDecimal.ZERO, BigDecimal::add);
+        return dijkstraShortestPath(graph, start, end, BigDecimal::add, BigDecimal.ZERO);
     }
 
     public static <V, L extends Comparable<? super L>> List<V> dijkstraShortestPath(LabeledGraph<V, L> graph, V start,
-                                                                                    V end, L zero,
-                                                                                    BinaryOperator<L> plus) {
-        return dijkstra(graph, plus, Predicate.isEqual(end), start, zero).constructParentPath(end);
+                                                                                    V end, BinaryOperator<L> plus,
+                                                                                    L zero) {
+        return dijkstra(graph, start, Predicate.isEqual(end), plus, zero).constructParentPath(end);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -120,47 +120,46 @@ public final class Graphs {
     ///////////////////////////////////////////////////////////////////////////
 
     public static <V> LabeledGraph<V, Byte> dijkstraAllShortestPathsByte(LabeledGraph<V, Byte> graph, V start) {
-        return dijkstraAllShortestPaths(graph, start, (byte) 0, (a, b) -> (byte) (a + b));
+        return dijkstraAllShortestPaths(graph, start, (a, b) -> (byte) (a + b), (byte) 0);
     }
 
     public static <V> LabeledGraph<V, Short> dijkstraAllShortestPathsShort(LabeledGraph<V, Short> graph, V start) {
-        return dijkstraAllShortestPaths(graph, start, (short) 0, (a, b) -> (short) (a + b));
+        return dijkstraAllShortestPaths(graph, start, (a, b) -> (short) (a + b), (short) 0);
     }
 
     public static <V> LabeledGraph<V, Integer> dijkstraAllShortestPathsInt(LabeledGraph<V, Integer> graph, V start) {
-        return dijkstraAllShortestPaths(graph, start, 0, Integer::sum);
+        return dijkstraAllShortestPaths(graph, start, Integer::sum, 0);
     }
 
     public static <V> LabeledGraph<V, Long> dijkstraAllShortestPathsLong(LabeledGraph<V, Long> graph, V start) {
-        return dijkstraAllShortestPaths(graph, start, 0L, Long::sum);
+        return dijkstraAllShortestPaths(graph, start, Long::sum, 0L);
     }
 
     public static <V> LabeledGraph<V, BigInteger> dijkstraAllShortestPathsBigInteger(
             LabeledGraph<V, BigInteger> graph,
             V start) {
-        return dijkstraAllShortestPaths(graph, start, BigInteger.ZERO, BigInteger::add);
+        return dijkstraAllShortestPaths(graph, start, BigInteger::add, BigInteger.ZERO);
     }
 
     public static <V> LabeledGraph<V, Float> dijkstraAllShortestPathsFloat(LabeledGraph<V, Float> graph, V start) {
-        return dijkstraAllShortestPaths(graph, start, (float) 0.0, Float::sum);
+        return dijkstraAllShortestPaths(graph, start, Float::sum, (float) 0.0);
     }
 
     public static <V> LabeledGraph<V, Double> dijkstraAllShortestPathsDouble(LabeledGraph<V, Double> graph, V start) {
-        return dijkstraAllShortestPaths(graph, start, 0.0, Double::sum);
+        return dijkstraAllShortestPaths(graph, start, Double::sum, 0.0);
     }
 
     public static <V> LabeledGraph<V, BigDecimal> dijkstraAllShortestPathsBigDecimal(
             LabeledGraph<V, BigDecimal> graph,
             V start) {
-        return dijkstraAllShortestPaths(graph, start, BigDecimal.ZERO, BigDecimal::add);
+        return dijkstraAllShortestPaths(graph, start, BigDecimal::add, BigDecimal.ZERO);
     }
 
     public static <V, L extends Comparable<? super L>> LabeledGraph<V, L> dijkstraAllShortestPaths(
             LabeledGraph<V, L> graph,
-            V start, L zero,
-            BinaryOperator<L> plus) {
+            V start, BinaryOperator<L> plus, L zero) {
         // we return a tree which contains all shortest paths from start to any other node
-        return dijkstra(graph, plus, v -> false, start, zero).constructParentTree(graph);
+        return dijkstra(graph, start, v -> false, plus, zero).constructParentTree(graph);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -168,9 +167,9 @@ public final class Graphs {
     ///////////////////////////////////////////////////////////////////////////
 
     private static <V, L extends Comparable<? super L>> VertexProperties<V> dijkstra(LabeledGraph<V, L> graph,
-                                                                                     BinaryOperator<L> plus,
-                                                                                     Predicate<V> stopCondition,
                                                                                      V start,
+                                                                                     Predicate<V> stopCondition,
+                                                                                     BinaryOperator<L> plus,
                                                                                      L zero) {
         VertexProperties<V> properties = new VertexProperties<>();
         Queue<Pair<V, L>> fringe = new PriorityQueue<>(Comparator.comparing(Pair::second));

@@ -110,6 +110,12 @@ public class VertexProperties<V> {
         return stack;
     }
 
+    public Graph<V> constructParentTree(Graph<V> graph) {
+        Graph<V> tree = graph.emptyGraph();
+        this.forEachParent((v, u) -> tree.addEdge(u, v));
+        return tree;
+    }
+
     public <L> LabeledGraph<V, L> constructParentTree(LabeledGraph<V, L> graph) {
         LabeledGraph<V, L> tree = (LabeledGraph<V, L>) graph.emptyGraph();
         this.forEachParent((v, u) -> tree.addEdge(u, v, graph.label(u, v)));
