@@ -246,33 +246,34 @@ public final class Graphs {
         if (!graph.isDirected()) {
             throw new IllegalArgumentException("Cannot compute topological ordering of an undirected graph");
         }
-        Set<V> visited = new HashSet<>();
-        Set<V> visiting = new HashSet<>();
-        LinkedList<V> stack = new LinkedList<>();
+        Set<V> visiting = new HashSet<>(((graph.size() *  4) / 3) + 1);
+        Set<V> visited = new HashSet<>(((graph.size() *  4) / 3) + 1);
+        Deque<V> stack = new ArrayDeque<>(graph.size());
         for (V vertex : graph.vertices()) {
-            if (!visited.contains(vertex)) {
-                if (!visit(graph, vertex, visited, visiting, stack)) {
-                    // visit returns false if there is a cycle
-                    return Collections.emptyList();
-                }
+            if (dfs(graph, vertex, visited, visiting,  v -> stack.push(v))) {
+                // dfs returns true if there is a cycle
+                return Collections.emptyList();
             }
         }
-        return stack;
+        return new ArrayList<>(stack);
     }
 
-    private static <V> boolean visit(Graph<V> graph, V start, Set<V> visited, Set<V> visiting, LinkedList<V> stack) {
+    private static <V> boolean dfs(Graph<V> graph, V vertex, Set<V> visited, Set<V> visiting, Consumer<V> visitedConsumer) {
         if (!visited.contains(start)) {
             if (visiting.contains(start)) {
                 // cycle exists: not a DAG
-                return false;
+                return true;
             }
-            visiting.add(start);
-            for (V neighbor : graph.getAdjacentOut(start)) {
-                visit(graph, neighbor, visited, visiting, stack);
+            visiting.add(vertex);
+            for (V neighbor : graph.getAdjacentOut(vertex)) {
+                if (dfs(graph, neighbor, visited, visiting, stack)) {
+                    return true;
+                }
             }
-            visited.add(start);
-            stack.push(start);
+            visiting.remove(vertex);
+            visited.add(vertex);
+            visitedConsumer.accept(vertex);
         }
-        return true;
+        return false;
     }
 }
