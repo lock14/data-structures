@@ -16,6 +16,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public final class Graphs {
@@ -246,9 +247,9 @@ public final class Graphs {
         if (!graph.isDirected()) {
             throw new IllegalArgumentException("Cannot compute topological ordering of an undirected graph");
         }
-        Set<V> visiting = new HashSet<>(((graph.size() *  4) / 3) + 1);
-        Set<V> visited = new HashSet<>(((graph.size() *  4) / 3) + 1);
-        Deque<V> stack = new ArrayDeque<>(graph.size());
+        Set<V> visiting = new HashSet<>(((graph.vertices().size() *  4) / 3) + 1);
+        Set<V> visited = new HashSet<>(((graph.vertices().size() *  4) / 3) + 1);
+        Deque<V> stack = new ArrayDeque<>(graph.vertices().size());
         for (V vertex : graph.vertices()) {
             if (dfs(graph, vertex, visited, visiting,  v -> stack.push(v))) {
                 // dfs returns true if there is a cycle
