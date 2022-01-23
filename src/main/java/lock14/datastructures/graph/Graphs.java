@@ -268,7 +268,7 @@ public final class Graphs {
             }
             visiting.add(vertex);
             for (V neighbor : graph.getAdjacentOut(vertex)) {
-                if (dfs(graph, neighbor, visited, visiting, stack)) {
+                if (dfs(graph, neighbor, visited, visiting, visitedConsumer)) {
                     return true;
                 }
             }
