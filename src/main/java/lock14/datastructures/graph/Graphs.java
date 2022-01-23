@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -260,8 +261,8 @@ public final class Graphs {
     }
 
     private static <V> boolean dfs(Graph<V> graph, V vertex, Set<V> visited, Set<V> visiting, Consumer<V> visitedConsumer) {
-        if (!visited.contains(start)) {
-            if (visiting.contains(start)) {
+        if (!visited.contains(vertex)) {
+            if (visiting.contains(vertex)) {
                 // cycle exists: not a DAG
                 return true;
             }
