@@ -1,5 +1,6 @@
 package lock14.datastructures.impl;
 
+import lock14.datastructures.Collection;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.ConcurrentModificationException;
@@ -28,6 +29,13 @@ public class Heap<E extends Comparable<? super E>> extends AbstractQueue<E> {
         heap = new Object[capacity];
         size = 0;
         modCount = 0;
+    }
+
+    public Heap(Collection<E> collection) {
+        this();
+        if (collection != null) {
+            addAll(collection);
+        }
     }
 
     @Override
@@ -174,6 +182,7 @@ public class Heap<E extends Comparable<? super E>> extends AbstractQueue<E> {
             delete(lastReturned);
             lastReturned = -1;
             index--;
+            expectedModCount++;
         }
 
         private void checkForModification() {

@@ -1,31 +1,41 @@
 package lock14.datastructures;
 
-public interface Deque<E> extends Queue<E> {
+public interface Deque<E> extends Queue<E>, Stack<E> {
 
     @Override
-    public default void enqueue(E element) {
+    default void enqueue(E element) {
         enqueueLast(element);
     }
 
-    public void enqueueFirst(E element);
+    void enqueueFirst(E element);
 
-    public void enqueueLast(E element);
+    void enqueueLast(E element);
 
     @Override
-    public default E dequeue() {
+    default E dequeue() {
         return dequeueFirst();
     }
 
-    public E dequeueFirst();
+    E dequeueFirst();
 
-    public E dequeueLast();
+    E dequeueLast();
 
     @Override
-    public default E peek() {
+    default E peek() {
         return peekFirst();
     }
 
-    public E peekFirst();
+    E peekFirst();
 
-    public E peekLast();
+    E peekLast();
+
+    @Override
+    default E pop() {
+        return dequeueFirst();
+    }
+
+    @Override
+    default void push(E item) {
+        enqueueFirst(item);
+    }
 }

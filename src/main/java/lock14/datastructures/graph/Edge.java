@@ -1,19 +1,19 @@
-package lock14.datastructures;
+package lock14.datastructures.graph;
 
 import java.util.Objects;
 
 public interface Edge<V> {
-    public V getU();
+    V getU();
 
-    public V getV();
+    V getV();
 
-    public boolean isOrdered();
+    boolean isOrdered();
 
-    public static <V> Edge<V> of(V u, V v) {
+    static <V> Edge<V> of(V u, V v) {
         return new SimpleEdge<>(u, v);
     }
 
-    static final class SimpleEdge<V> implements Edge<V> {
+    final class SimpleEdge<V> implements Edge<V> {
         private V u;
         private V v;
 
@@ -52,6 +52,11 @@ public interface Edge<V> {
         @Override
         public int hashCode() {
             return Objects.hash(u, v);
+        }
+
+        @Override
+        public String toString() {
+            return "(" + u + ", " + v + ")";
         }
     }
 }

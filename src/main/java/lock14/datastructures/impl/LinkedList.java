@@ -8,8 +8,7 @@ import lock14.datastructures.Collection;
 import lock14.datastructures.SequentialList;
 
 public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> {
-    private Node<E> head;
-    private Node<E> tail;
+    private final Node<E> list;
     private int size;
     private int modificationCount;
 
@@ -19,10 +18,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
 
     public LinkedList(Collection<E> c) {
         // create sentinel nodes
-        head = new Node<>(null);
-        tail = new Node<>(null);
-        head.next = tail;
-        tail.prev = head;
+        list = Node.sentinel();
         size = 0;
         modificationCount = 0;
         Optional.ofNullable(c).ifPresent(this::addAll);
@@ -91,7 +87,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
 
     private Node<E> nodeAt(int index) {
         if (index < size >> 1) {
-            Node<E> cur = head.next;
+            Node<E> cur = list.next;
             int i = 0;
             while (i < index) {
                 cur = cur.next;
@@ -99,7 +95,7 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
             }
             return cur;
         } else {
-            Node<E> cur = tail;
+            Node<E> cur = list;
             int i = size;
             while (i > index) {
                 cur = cur.prev;
@@ -218,6 +214,13 @@ public class LinkedList<E> extends AbstractList<E> implements SequentialList<E> 
             this.data = data;
             this.prev = prev;
             this.next = next;
+        }
+
+        static <E> Node<E> sentinel() {
+            Node<E> node = new Node<>(null);
+            node.next = node;
+            node.prev = node;
+            return node;
         }
     }
 
