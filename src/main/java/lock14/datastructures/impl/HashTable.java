@@ -1,12 +1,13 @@
 package lock14.datastructures.impl;
 
-import lock14.datastructures.Map;
 import lock14.datastructures.Pair;
 import lock14.datastructures.Set;
+
+import java.util.Arrays;
 import java.util.Iterator;
 
-public class HashTable<K, V> implements Map<K, V> {
-    public static final int DEFAULT_SIZE = 100;
+public class HashTable<K, V> extends AbstractMap<K, V> {
+    private static final int DEFAULT_SIZE = 100;
     private static final double MAX_LOAD_FACTOR = 0.7;
 
     private HashNode<?, ?>[] hashTable;
@@ -29,7 +30,7 @@ public class HashTable<K, V> implements Map<K, V> {
         // key will not be null if we get to this line
         V result = null;
         if (entry == null) {
-            insertEntry(new HashNode<K, V>(key, value));
+            insertEntry(new HashNode<>(key, value));
         } else {
             result = entry.value;
             entry.value = value;
@@ -87,9 +88,7 @@ public class HashTable<K, V> implements Map<K, V> {
     }
 
     public void clear() {
-        for (int i = 0; i < hashTable.length; i++) {
-            hashTable[i] = null;
-        }
+        Arrays.fill(hashTable, null);
         size = 0;
     }
 

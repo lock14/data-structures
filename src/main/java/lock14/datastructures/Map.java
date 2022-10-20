@@ -13,14 +13,14 @@ public interface Map<K, V> {
      *
      * @return the number of key-getLabel mappings in this map
      */
-    public int size();
+    int size();
 
     /**
      * Returns true if this map contains no key-getLabel mappings.
      *
      * @return true if this map contains no key-getLabel mappings
      */
-    public boolean isEmpty();
+    boolean isEmpty();
 
     /**
      * Returns true if this map contains a mapping for the specified key. More formally, returns true if
@@ -33,7 +33,7 @@ public interface Map<K, V> {
      * @throws NullPointerException - if the specified key is null and this map does not permit null
      *         keys (optional)
      */
-    public boolean containsKey(Object key);
+    boolean containsKey(Object key);
 
     /**
      * Returns true if this map maps one or more keys to the specified getLabel. More formally, returns
@@ -47,7 +47,7 @@ public interface Map<K, V> {
      * @throws NullPointerException - if the specified getLabel is null and this map does not permit
      *         null keys (optional)
      */
-    public boolean containsValue(Object value);
+    boolean containsValue(Object value);
 
     /**
      * Returns the getLabel to which the specified key is mapped, or null if this map contains no
@@ -66,7 +66,7 @@ public interface Map<K, V> {
      * @throws NullPointerException - if the specified key is null and this map does not permit null
      *         keys (optional)
      */
-    public V get(Object key);
+    V get(Object key);
 
     /**
      * Associates the specified getLabel with the specified key in this map (optional operation). If the
@@ -87,15 +87,23 @@ public interface Map<K, V> {
      * @throws IllegalArgumentException - if some property of the specified key or getLabel prevents it
      *         from being stored in this map
      */
-    public V put(K key, V value);
+    V put(K key, V value);
+
+    V remove(Object key);
+
+    void putAll(Map<? extends K, ? extends V> map);
 
     /**
      * Removes all of the mappings from this map (optional operation)
      *
      * @throws UnsupportedOperationException - if the clear operation is not supported by this map
      */
-    public default void clear() {
-        throw new UnsupportedOperationException();
-    }
+    void clear();
+
+    Set<K> keySet();
+
+    Collection<V> values();
+
+    Set<Pair<K, V>> entrySet();
 
 }
