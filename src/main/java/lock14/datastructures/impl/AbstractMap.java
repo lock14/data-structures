@@ -4,7 +4,6 @@ import lock14.datastructures.Collection;
 import lock14.datastructures.Map;
 import lock14.datastructures.Pair;
 import lock14.datastructures.Set;
-
 import java.util.Iterator;
 
 public abstract class AbstractMap<K, V> implements Map<K, V> {
@@ -13,6 +12,7 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
     public Set<K> keySet() {
         return new AbstractSet<K>() {
             private Set<Pair<K, V>> entrySet = entrySet();
+
             @Override
             public Iterator<K> iterator() {
                 return new Iterator<K>() {

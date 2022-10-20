@@ -1,12 +1,8 @@
 package lock14.datastructures.impl;
 
-import lock14.datastructures.Map;
 import lock14.datastructures.Pair;
 import lock14.datastructures.Set;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 
 public class HashTable<K, V> extends AbstractMap<K, V> {
     private static final int DEFAULT_SIZE = 100;
